@@ -19,10 +19,18 @@ int main()
         Mat Component = imread(Path+"Component"+to_string(n)+".png");
 
         //================Your code goes here=====================
+        Mat matchImage;
+        matchTemplate( PCB, Component, matchImage, TM_SQDIFF_NORMED );
 
+        double minval, maxval;
+        Point minloc, maxloc, matchloc;
+        minMaxLoc(matchImage, &minval, &maxval, &minloc, &minloc);
+        matchloc = minloc;
 
+        rectangle(matchImage, matchloc, Point( matchloc.x + Component.cols, matchloc.y + Component.rows), Scalar(0,0,255), 2, 8, 0);
+        rectangle(PCB, matchloc, Point( matchloc.x + Component.cols, matchloc.y + Component.rows), Scalar(0,0,255), 2, 8, 0);
 
-
+        cout << matchloc << endl;
 
 
 
@@ -42,6 +50,7 @@ int main()
         while(waitKey(10)!='x'){
             imshow("Target", Component);
             imshow("PCB", PCB);
+            imshow("Result",matchImage);
         }
 
     }
