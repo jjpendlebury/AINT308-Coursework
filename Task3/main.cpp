@@ -24,13 +24,17 @@ int main()
 
         double minval, maxval;
         Point minloc, maxloc, matchloc;
-        minMaxLoc(matchImage, &minval, &maxval, &minloc, &minloc);
+        minMaxLoc(matchImage, &minval, &maxval, &minloc, &maxloc);
         matchloc = minloc;
-
         rectangle(matchImage, matchloc, Point( matchloc.x + Component.cols, matchloc.y + Component.rows), Scalar(0,0,255), 2, 8, 0);
         rectangle(PCB, matchloc, Point( matchloc.x + Component.cols, matchloc.y + Component.rows), Scalar(0,0,255), 2, 8, 0);
 
+
         cout << matchloc << endl;
+        cout << minval << endl <<endl;
+        if(minval >0.01){
+            cout << "Component number " << n<<" not found" << endl;
+        }
 
 
 

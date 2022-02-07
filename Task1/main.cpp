@@ -48,25 +48,19 @@ int main(){
                if ((b>1.5*g) && (b>1.5*r) && (b>125)){
                    bluecount++;
                    if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
-                       bluecount++;
-                       bluecount++;
-                       bluecount++;
+                       bluecount = bluecount + 3;
                    }
                }
                else if ((g>1.5*b) && (g>1.5*r) && (g>125)){
                    greencount++;
                    if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
-                       greencount++;
-                       greencount++;
-                       greencount++;
+                       greencount = greencount +3;
                    }
                }
                else if ((r>1.5*b) && (r>1.5*g) && (r>125)){
                    redcount++;
                    if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
-                       redcount++;
-                       redcount++;
-                       redcount++;
+                       redcount = redcount +3;
                    }
                }
                //cout<<"The blue value at (" <<to_string(y) << ","<<to_string(x) << ") is " <<(int)PixelValue[0]<<endl;
