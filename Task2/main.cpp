@@ -57,14 +57,21 @@ int main()
         Point p_right(m.m10/m.m00, (m.m01/m.m00)+50);
         Point p_up((m.m10/m.m00)+50, (m.m01/m.m00));
         Point p_down((m.m10/m.m00)-50, (m.m01/m.m00));
+        //vertical line point
+        Point vert_line_end(392,52);
+        //text location
+        Point p_text(650,70);
         circle(Frame, p, 20, Scalar(255,0,0), 3);
         circle(Frame, Pivot, 10, Scalar(255,0,0), -1);
         line(Frame, p,Pivot, Scalar(255,0,0), 2);
         line(Frame, p_left, p_right,Scalar(255,0,0), 2);
         line(Frame, p_up, p_down,Scalar(255,0,0), 2);
+        //vertical line
+        line(Frame, Pivot, vert_line_end, Scalar(0,0,255),2);
 
         double angle = (atan2(p.x,p.y))-M_PI_4;
-
+        string text = "Angle ="+to_string(angle)+" Radians";
+        putText(Frame, text, p_text, FONT_HERSHEY_SIMPLEX, 1, Scalar(0,0,255));
 
 
         cout << angle <<endl;
