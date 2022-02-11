@@ -39,33 +39,33 @@ int main(){
 
         for(x=0; x<cols; x++){
             for(y=0; y<rows; y++){
-               Vec3b PixelValue = Car.at<Vec3b>(y,x);                   //get pixel value
-               //check which value is higher
-               int b,g,r;                                               //b g r values
-               b = PixelValue[0];
-               g = PixelValue[1];
-               r = PixelValue[2];
-               if ((b>1.5*g) && (b>1.5*r) && (b>125)){
-                   bluecount++;
-                   if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
-                       bluecount = bluecount + 3;
-                   }
-               }
-               else if ((g>1.5*b) && (g>1.5*r) && (g>125)){
-                   greencount++;
-                   if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
-                       greencount = greencount +3;
-                   }
-               }
-               else if ((r>1.5*b) && (r>1.5*g) && (r>125)){
-                   redcount++;
-                   if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
-                       redcount = redcount +3;
-                   }
-               }
-               //cout<<"The blue value at (" <<to_string(y) << ","<<to_string(x) << ") is " <<(int)PixelValue[0]<<endl;
-               //cout<<"The green value at (0,0) is "<<(int)PixelValue[1]<<endl;
-               //cout<<"The red value at (0,0) is "  <<(int)PixelValue[2]<<endl;
+                Vec3b PixelValue = Car.at<Vec3b>(y,x);                   //get pixel value
+                //check which value is higher
+                int b,g,r;                                               //b g r values
+                b = PixelValue[0];
+                g = PixelValue[1];
+                r = PixelValue[2];
+                if ((b>1.5*g) && (b>1.5*r) && (b>125)){
+                    bluecount++;
+                    if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
+                        bluecount = bluecount + 3;
+                    }
+                }
+                else if ((g>1.5*b) && (g>1.5*r) && (g>125)){
+                    greencount++;
+                    if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
+                        greencount = greencount +3;
+                    }
+                }
+                else if ((r>1.5*b) && (r>1.5*g) && (r>125)){
+                    redcount++;
+                    if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
+                        redcount = redcount +3;
+                    }
+                }
+                //cout<<"The blue value at (" <<to_string(y) << ","<<to_string(x) << ") is " <<(int)PixelValue[0]<<endl;
+                //cout<<"The green value at (0,0) is "<<(int)PixelValue[1]<<endl;
+                //cout<<"The red value at (0,0) is "  <<(int)PixelValue[2]<<endl;
             }
         }
         ;
@@ -91,6 +91,118 @@ int main(){
         }
 
     }
+    //testing with expanded dataset
+    int blue_correct,green_correct,red_correct,result, temp_correct = 0;
+    for(int p=0; p<3; ++p){
+        temp_correct = 0;
+        for(int n=1; n<30; ++n){
+
+            //Each image is named 0.png, 1.png, 2.png, etc. So generate the image file path based on n and the folder path
+            if (p==0){
+                PathToFolder = "../Task1/add_blue/";
+            } else if (p==1) {
+                PathToFolder = "../Task1/add_green/";
+            } else {
+                PathToFolder = "../Task1/add_red/";
+            }
+            string PathToImage = PathToFolder+to_string(n)+".png";
+
+            cout<<PathToImage<<endl;
+
+            //Load car image at the file paths location
+            Mat Car=imread(PathToImage);
+
+            //Your code goes here. The example code below shows you how to read the red, green, and blue colour values of the
+            //pixel at position (0,0). Modify this section to check not just one pixel, but all of them in the 640x480 image
+            //(using for-loops), and using the RGB values classifiy if a given pixel looks red, green, blue, or other.
+
+            //==============example code, feel free to delete=============
+            int rows, cols;                                                 //variables to hold the size of the matrix
+            int bluecount = 0,greencount = 0,redcount = 0;                  //pixel counts
+            double lowlimit = 0.2,highlimit=0.8;                            //limits for the enhanced weighting area
+            int x=0;
+            int y=0;
+            Size s = Car.size();                                            //extract the size of the matrix
+            rows = s.height;                                                //number of rows of pixels
+            cols = s.width;                                                 //number of columns of pixels
+
+            for(x=0; x<cols; x++){
+                for(y=0; y<rows; y++){
+                    Vec3b PixelValue = Car.at<Vec3b>(y,x);                   //get pixel value
+                    //check which value is higher
+                    int b,g,r;                                               //b g r values
+                    b = PixelValue[0];
+                    g = PixelValue[1];
+                    r = PixelValue[2];
+                    if ((b>1.5*g) && (b>1.5*r) && (b>125)){
+                        bluecount++;
+                        if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
+                            bluecount = bluecount + 3;
+                        }
+                    }
+                    else if ((g>1.5*b) && (g>1.5*r) && (g>125)){
+                        greencount++;
+                        if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
+                            greencount = greencount +3;
+                        }
+                    }
+                    else if ((r>1.5*b) && (r>1.5*g) && (r>125)){
+                        redcount++;
+                        if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
+                            redcount = redcount +3;
+                        }
+                    }
+                    //cout<<"The blue value at (" <<to_string(y) << ","<<to_string(x) << ") is " <<(int)PixelValue[0]<<endl;
+                    //cout<<"The green value at (0,0) is "<<(int)PixelValue[1]<<endl;
+                    //cout<<"The red value at (0,0) is "  <<(int)PixelValue[2]<<endl;
+                }
+            }
+            ;
+            //Vec3b PixelValue = Car.at<Vec3b>(y,x);
+            //cout << "Blue Count = " << (int)bluecount <<endl;
+            //cout << "Green Count = " << (int)greencount <<endl;
+            //cout << "Red Count = " << (int)redcount <<endl;
+            if ((bluecount>greencount) && (bluecount>redcount)){
+                //cout<<"This car is blue" <<endl;
+                result = 0;
+            }
+            else if ((greencount>bluecount) && (greencount>redcount)){
+                //cout<<"This car is green" <<endl;
+                result = 1;
+            }
+            else {
+                //cout<<"This car is red" <<endl;
+                result = 2;
+            }
+
+            //see if the result is correct
+            if (p == result){
+                temp_correct++;
+            } else {
+                cout <<"Incorrect - image " << n <<endl;
+
+                //display the car image untill x is pressed
+                while(waitKey(10)!='x'){
+                    imshow("Car", Car);
+                }
+            }
+
+            //============================================================
+
+
+        }
+        //offload temp result into thex correct result variable
+        if (p==0){
+            blue_correct = temp_correct;
+        } else if (p==1){
+            green_correct = temp_correct;
+        } else if (p==2) {
+            red_correct = temp_correct;
+        }
+    }
+    cout << "blue correct = " << blue_correct+1<<"/30" <<endl;
+    cout << "green correct = " << green_correct+1<<"/30" <<endl;
+    cout << "red correct = " << red_correct+1<<"/30" <<endl;
 
 }
 
