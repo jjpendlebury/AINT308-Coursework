@@ -58,28 +58,34 @@ int main()
         Point p_up((m.m10/m.m00)+50, (m.m01/m.m00));
         Point p_down((m.m10/m.m00)-50, (m.m01/m.m00));
         //vertical line point
-        Point vert_line_end(392,52);
+        Point vert_line_end(592,600);
         //text location
         Point p_text(650,70);
+        Point p_text2(774,100);
+        //vertical line
+        line(Frame, Pivot, vert_line_end, Scalar(0,0,255),2);
+        //
         circle(Frame, p, 20, Scalar(255,0,0), 3);
         circle(Frame, Pivot, 10, Scalar(255,0,0), -1);
         line(Frame, p,Pivot, Scalar(255,0,0), 2);
         line(Frame, p_left, p_right,Scalar(255,0,0), 2);
         line(Frame, p_up, p_down,Scalar(255,0,0), 2);
-        //vertical line
-        line(Frame, Pivot, vert_line_end, Scalar(0,0,255),2);
 
-        double angle = (atan2(p.x,p.y))-M_PI_4;
-        string text = "Angle ="+to_string(angle)+" Radians";
-        putText(Frame, text, p_text, FONT_HERSHEY_SIMPLEX, 1, Scalar(0,0,255));
+        //angle calculations
+        double angle = (atan2(p.x,p.y))-M_PI_4;                                                 //PI/4 offset since zero axis is in the negative y direction
+        double angle_degrees = angle * (180/M_PI);                                              //Conversion to degrees for display purposes
+        string text = "Angle ="+to_string(angle)+" Radians";                                    //String construction
+        string text_degrees = to_string(angle_degrees)+" Degrees";
+        putText(Frame, text, p_text, FONT_HERSHEY_SIMPLEX, 1, Scalar(0,0,255),2);               //Put text on frame
+        putText(Frame, text_degrees, p_text2, FONT_HERSHEY_SIMPLEX, 1, Scalar(0,0,255),2);      //Roughly lines up with line above
 
 
-        cout << angle <<endl;
-        DataFile << angle <<endl;
+        cout << angle <<endl;                                                                   //Print angle to console
+        DataFile << angle <<endl;                                                               //Send the output to the data file
         Mat3b combined,FilterRGB;
         cvtColor(FrameFiltered,FilterRGB,COLOR_GRAY2BGR);
 
-        hconcat(Frame,FilterRGB,combined);
+        hconcat(Frame,FilterRGB,combined);                                                      //combine the original and hue-shifted video feeds into one window
         //==============================================================================================================================
 
         //display the frame
