@@ -1,0 +1,80 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[export]{adjustbox}
+\usepackage{float}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage[style=numeric,sorting=none]{biblatex}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{multirow}
+\usepackage{fancyhdr}
+\usepackage[toc]{appendix}
+\graphicspath{ {../images/} }
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{10613591}
+\lhead{AINT308 Coursework Report}
+\rfoot{Page \thepage}
+
+\renewcommand{\listfigurename}{}
+\renewcommand{\listtablename}{}
+\hypersetup{
+    colorlinks=false, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    linkcolor=blue,  %choose some color if you want links to stand out
+}
+%\addbibresource{AINT351.bib}
+\begin{document}
+\title{AINT308 Coursework Report}
+\author{Student Number: 10613591}
+\date{\today}
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\begin{abstract}
+
+\end{abstract}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{ |p{3cm}||p{3cm}| }
+ \hline
+ \multicolumn{2}{|c|}{Set-up Variables} \\
+ \hline
+ Variable& Value\\
+ \hline
+ Link Lengths & $0.4$\\
+ Origin & $(0.45,0.3)$\\
+ \hline
+\end{tabular}
+\caption{Set-up values used for the animated arm}
+\end{table}
+
+
+\begin{figure}[H]
+	\begin{adjustbox}{center,max width=1.1\textwidth}
+	\includegraphics[scale=0.7]{P4plotfunc}
+	\end{adjustbox}
+	\caption{ Code to animate the arm moving though the maze}
+	\label{fig:p4plotfunc}
+\end{figure}
+
+\newpage
+\addcontentsline{toc}{section}{References}
+\printbibliography
+\appendix
+
+\section{List of Figures}
+\listoffigures
+\section{List of Tables}
+\listoftables
+\end{document}
+
