@@ -128,10 +128,26 @@ Machine Vision, OpenCV, Object Tracking
 \subsection{Introduction}
 The first task involves creating a system able to label a dataset of car colours reg, green, or blue.
 \subsection{Solution}
-As part of its suite of features, \textbf{OpenCV} includes the ability to retrieve individual pixels values. The specific values available will vary based on the colour space used. For example, working in the \textit{RGB} colour space enables a pixel's \textit{Red,Green} and \textit{Blue} values to be retrieved. Using this infomation, it is possible to calculate the colour of an object in an image.
+As part of its suite of features, \textbf{OpenCV} includes the ability to retrieve individual pixel's values. The specific values available will vary based on the colour space used. For example, working in the \textit{RGB} colour space enables a pixel's \textit{Red,Green} and \textit{Blue} values to be retrieved. Using this information, it is possible to calculate the mode colour of an image. 
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=2.5in]{t1}
+\caption{Pixel testing code}
+\label{fig_t1code}
+\end{figure}
+
+The code in figure \ref{fig_t1code} performs the checks needed to assertain a pixel's primary colour. Initial attempts simply checked which of three component values were highest. In practice, this method was inaccurate as it had no way between differentiating between a near-white cell (such as a background cloud) which would have near equal \textit{RGB} values, and one that belonged to the subject (in this case, the car).
+
+To allow the algorithm to differentiate between background elements and the subject, two methods were employed. Firstly, a pixel was only counted if that colour's value was a significant margin higher than the other values. In figure \ref{fig_t1code} this margin is $50\%$. Additionally, the pixel's value must be greater than half the colour space's maximum value, in this case 125. This prevents background objects from being counted.
+
+
+Additionally, extra weighting is applied to pixels within a central rectangle on the screen. This area can be changed by editing the values $highlimit$ and $lowlimit$. By adding this additional weighting to central areas, background areas are further discounted, helping to prevent false positives by valuing true positives more.
+
+With the provided testing dataset of thirty red, blue, or green cars this solution is 100$\%$ accurate, correctly identifying the subject's colour in every image. This is a marked improvement from the simple method used in the initial attempt, which would often get confused at reflections in windows (these would be reflecting the sky, which would add bias towards blue), background walls (especially brick, which would bias the results towards red), and any natural backgrounds (adding green bias).
 
 \subsection{Limitations}
+This solution is extremely limited
 \subsection{Further Improvements}
 \subsection{Conclusion}
 
@@ -163,7 +179,7 @@ As part of its suite of features, \textbf{OpenCV} includes the ability to retrie
 % option should be used if it is desired that the figures are to be
 % displayed while in draft mode.
 %
-%\begin{figure}[!t]
+%\begin{figure}[H]
 %\centering
 %\includegraphics[width=2.5in]{myfigure}
 % where an .eps filename suffix will be assumed under latex, 
