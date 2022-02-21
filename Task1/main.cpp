@@ -92,7 +92,7 @@ int main(){
 
     }
     //testing with expanded dataset
-    int blue_correct,green_correct,red_correct,result, temp_correct = 0;
+    int blue_correct = 0,green_correct = 0,red_correct = 0,result = 0, temp_correct = 0;
     for(int p=0; p<3; ++p){
         temp_correct = 0;
         for(int n=1; n<30; ++n){
