@@ -93,8 +93,8 @@
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-%\usepackage[style=numeric,sorting=none]{biblatex}
-%\addbibresource{roco318.bib}
+\usepackage[style=numeric,sorting=none]{biblatex}
+\addbibresource{AINT308.bib}
 
 \begin{document}
 %
@@ -122,13 +122,13 @@ Plymouth, Devon}}
  Machine Vision is field of study who's applications are becoming rapidly more prevalent amongst contemporary technology, with advancements having large implications in a wide variety of fields. This report details the use of a popular open-source machine vision library, \textbf{OpenCV}, in three different applications: Identifying the most common colour in an image, tracking a moving object within a video, and matching sub-components of an image to a larger image.
 \end{abstract}
 \subsection*{Keywords:}
-Machine Vision, OpenCV, Object Tracking
+Machine Vision, OpenCV, Object Tracking, C++
 
 \section{Task 1 - Colour Sorter}
 \subsection{Introduction}
-The first task involves creating a system able to label a dataset of car colours reg, green, or blue.
+The first task involves creating a system able to label a dataset of car colours red, green, or blue.
 \subsection{Solution}
-As part of its suite of features, \textbf{OpenCV} includes the ability to retrieve individual pixel's values. The specific values available will vary based on the colour space used. For example, working in the \textit{RGB} colour space enables a pixel's \textit{Red,Green} and \textit{Blue} values to be retrieved. Using this information, it is possible to calculate the mode colour of an image. 
+As part of its suite of features, \textbf{OpenCV} includes the ability to retrieve individual pixel's values. The specific values available will vary based on the colour space used. For example, working in the \textit{RGB} colour space enables a pixel's \textit{Red,Green} and \textit{Blue} values to be retrieved. Using this information, it is possible to calculate the modal colour of an image. 
 
 \begin{figure}[H]
 \centering
@@ -146,14 +146,51 @@ Additionally, extra weighting is applied to pixels within a central rectangle on
 
 With the provided testing dataset of thirty red, blue, or green cars this solution is 100$\%$ accurate, correctly identifying the subject's colour in every image. This is a marked improvement from the simple method used in the initial attempt, which would often get confused at reflections in windows (these would be reflecting the sky, which would add bias towards blue), background walls (especially brick, which would bias the results towards red), and any natural backgrounds (adding green bias).
 
+To further demonstrate the improvements performance, an additional dataset was sourced of ninety images, thirty of each colour. The results of this testing are visible in table \ref{testing_results1}.
+
+\begin{table}[H]
+% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+\caption{Expanded dataset testing results}
+\label{testing_results1}
+\centering
+\begin{tabular}{|c||c|}
+\hline
+Colour & Result\\
+\hline
+Red & 30/30\\
+\hline
+Green & 28/30\\
+\hline
+Blue & 30/30\\
+\hline
+\end{tabular}
+\end{table}
+
+
+
 \subsection{Limitations}
-This solution is extremely limited
-\subsection{Further Improvements}
+This solution is extremely limited in its current format. The solution has no form of object recognition, meaning that it cannot differentiate between the car that it is trying to find the colour of, and any other objects inside the image. The middle-area weighting attempts to control for this, however it assumes that the subject of the image is centre-frame, which is something that cannot be said for all images of cars. This solution also has no way to deal with multiple cars in one image, especially ones of different colours. 
+
+Additionally, using \textit{RGB} values is extremely limiting for colour recognition. The algorithm could not be expanded to detect additional colours (such as secondary colours made of a combination of red, green, and blue) without introducing a large amount of error. A major disadvantage of \textit{RGB} values is that they can vary greatly based on the lighting conditions present in the image. Other colour spaces isolate the brightness (or luma) value, allowing for changes in lighting to be compensated for. A further problem with \textit{RGB}'s representation of colour is that the hue is described as a combination of all three values, making it hard to isolate specific colours, as it is extremely rare for any physical colour to exist in purely one colour channel.
+
+
+\subsection{Further Improvements} \label{sec:further1}
+A major improvement that could be made is switching colour space to \textit{HSV} instead of \textit{RGB}. \textit{HSV} has numerous benefits for colour recognition when compared to \textit{RGB}. \textit{HSV} uses three values to describe a colour: \textit{hue}, \textit{saturation}, and \textit{value}. Light changes will only affect two of these values; the \textit{hue} value remains constant\cite{RBGvHSV}. This is perfect for colour recognition applications as it means changes in lighting, as well as natural minor differences in colours, can be compensated for with much tighter ranges than in any other colour space.
+
+Additionally, changing to \textit{HSV} would allow for more colours to be recognised, as only the colour's \textit{hue} value would need to be programmed in for the algorithm to recognise it. This would allow for theoretically any colour to be recognised, so long as its value is programmed in. In comparison to \textit{RGB}, where as each colour is a mixture of all three channels, this is much simpler to implement.
 \subsection{Conclusion}
+This solution is adequate when the dataset is tightly controlled and consists only of red, green, or blue cars, in centre frame, with colour-neutral lighting. Due to the limitations of both the approach and colour space, anything more than marginal performance increases would require significant changes to the methodology. Changing colour space to \textit{HSV} would provide a large increase to accuracy, as well as allow for the solution to be expanded to cover more colours.
 
 \section{Task 2 - Object Tracking}
+The second task involves tracking a pendulum, and using the observed displacement to calculate the pendulum's angular deviation from it's vertical rest position.
 \subsection{Introduction}
+In order for the angle to be calculated, the pendulum's motion must be tracked. Fortunately, the pendulum arm has a green target affixed to the end. By isolating this colour from the background, and calculating the centre of mass using OpenCV's \textit{moments} functionality, the angle can be calculated using trigonometry.
 \subsection{Solution}
+The first stage of the solution is to find all the pixels that match the colour of the target on the pendulum arm. To do this, the colourspace is first converted to \textit{HSV, \textbf{H}ue, \textbf{S}aturation, \textbf{V}alue.} As discussed in section \ref{sec:further1}, \textit{HSV} has numerous benefits over \textit{RGB} for colour recognition, primarily that colours can easily be isolated using the \textit{hue} value, unlike in \textit{RGB} where a colour is dependant on the values of all three channels.
+
 \subsection{Limitations}
 \subsection{Further Improvements}
 \subsection{Conclusion}
@@ -252,8 +289,8 @@ This solution is extremely limited
 \newpage
 \appendix
 
-%\printbibliography
-
+\printbibliography
+%https://handmap.github.io/hsv-vs-rgb/ - RGB vs HSV
 
 % that's all folks
 \end{document}
