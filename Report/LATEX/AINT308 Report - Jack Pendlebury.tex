@@ -187,14 +187,62 @@ This solution is adequate when the dataset is tightly controlled and consists on
 \section{Task 2 - Object Tracking}
 The second task involves tracking a pendulum, and using the observed displacement to calculate the pendulum's angular deviation from it's vertical rest position.
 \subsection{Introduction}
-In order for the angle to be calculated, the pendulum's motion must be tracked. Fortunately, the pendulum arm has a green target affixed to the end. By isolating this colour from the background, and calculating the centre of mass using OpenCV's \textit{moments} functionality, the angle can be calculated using trigonometry.
+In order for the angle to be calculated, the pendulum's motion must be tracked. Fortunately, the pendulum arm has a green target affixed to the end. By isolating this colour from the background, and calculating the centre of mass(CoM) using OpenCV's \textit{moments} functionality, the angle can be calculated using trigonometry.
 \subsection{Solution}
-The first stage of the solution is to find all the pixels that match the colour of the target on the pendulum arm. To do this, the colourspace is first converted to \textit{HSV, \textbf{H}ue, \textbf{S}aturation, \textbf{V}alue.} As discussed in section \ref{sec:further1}, \textit{HSV} has numerous benefits over \textit{RGB} for colour recognition, primarily that colours can easily be isolated using the \textit{hue} value, unlike in \textit{RGB} where a colour is dependant on the values of all three channels.
+The first stage of the solution is to find all the pixels that match the colour of the target on the pendulum arm. To do this, the colour space is first converted to \textit{HSV, \textbf{H}ue, \textbf{S}aturation, \textbf{V}alue.} As discussed in section \ref{sec:further1}, \textit{HSV} has numerous benefits over \textit{RGB} for colour recognition, primarily that colours can easily be isolated using the \textit{hue} value, unlike in \textit{RGB} where a colour is dependant on the values of all three channels.
 
-\subsection{Limitations}
+To isolate the target, \textit{OpenCV}'s \textit{inRange} function is used. This function takes four arguments, an input matrix, a vector of lower bounds, a vector of upper bounds, and then an output matrix. The output matrix is monochrome, highlighting areas that lie within the provided bounds in white, and any that do not fall within these bounds in black. See appendix \ref{app:T2} to see the output of the program.
+
+\begin{table}[H]
+% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+\caption{\textit{HSV} thresholds used inside the \textit{inRange} function}
+\label{tab:t2thresholds}
+\centering
+\begin{tabular}{|c||c|c|}
+\hline
+Property & Lower Threshold & Upper Threshold\\
+\hline
+Hue & 70 & 80\\
+\hline
+Saturation & 30 & 255\\
+\hline
+Value & 30 & 255\\
+\hline
+\end{tabular}
+\end{table}
+
+As shown by table \ref{tab:t2thresholds}, the \textit{saturation} and \textit{value} variables have an extremely wide range to them, while still maintaining high accuracy. The narrow \textit{hue} range is used to isolate the specific shade of green used on the target.
+
+The centre of mass is calculated using the \textit{moments} function, then displayed as a point. To further aid the user, a cross hair is drawn over the centre of the target, with a line connecting it to the fulcrum at the top of the pendulum arm. For reference, an additional vertical line is drawn, representing an approximation of the vertical rest position.
+
+The current angle is calculated by taking the arctangent, or inverse tangent, of the pendulum line.
+
+\begin{equation}
+angle = arctan(pendulum) - \pi /4
+\end{equation}
+An offset of $\pi /4$ is added in order to centre the graph around the 0 mark. Additionally, the angle is also displayed in degrees.
+
+\begin{equation}
+angle = x*(180/\pi )
+\end{equation}
+
+Figure \ref{fig_t2graph} within appendix \ref{app:T2} shows the output graph. Comparing the output graph to the observed behaviour of the systems shows that the results are as expected, with the pendulum acting equivalently to a dampened system returning to its rest state after receiving a stimulus.
+
+\subsection{Limitations}\label{sec:t2_lim}
+This implementation of object tracking does have its limitations. Firstly, it relies on the tracked target being a known colour, and also no other objects of a similar colour being observed by the input. This could be improved by using an additional technique to identify the target, for example, looking for a unique shape using edge detection, or making the target more complex than a single colour, such as two colours in a tiled pattern.
+
+Ideally, if visual detection is to be used, the target must be as unique as possible, to reduce the chances of objects within the camera's line of sight having enough similarity to confuse it. The current implementation relies on no objects being a similar shade of green, which works for the current scenario, but may be unreliable for less controlled applications. 
+
+An additional issue with the optical based measurement employed here is that it relies on the target swinging on a path orthogonal to the camera. As shown in the output graph, there is a bias towards the positive direction, caused by the testing apparatus being slightly offset from the camera, distorting the results. This could be compensated for in software, however  it would be complex to implement, and the reliability of such a solution cannot be speculated on.
 \subsection{Further Improvements}
-\subsection{Conclusion}
+As discussed in section \ref{sec:t2_lim}, suggested improvements revolve around reducing the chance for non-target objects that have similar properties. This would involve increasing the relative complexity of the targets. For ease of implementation, the targets should have as many orders of rotational symmetry as possible, to avoid having issues with having to recognise every rotational permutation of the target. \textit{OpenCV} provides documentation on recognising rotated images\cite{OpenCV_Rotate}. Additionally, a neural network could be trained to recognise the targets in any orientation or offset quickly enough to perform in real-time\cite{google}. An easy way to increase the complexity would be to add an additional distinctive colour, and then have the software look for the two colours adjacent to each other. 
 
+While potentially outside the scope of the task, a generalised method for compensating for offset apparatus would increase the validity of the results, and help make any tests performed with this system more repeatable. Software based algorithms exist that can perform this function with minimal latency \cite{5138693}. 
+\subsection{Conclusion}
+As per task one, this solution works extremely well in the controlled environment present in the video, however would need increased robustness - provided either by an increase in target complexity, or additional tracking methods - to succeed in a less controlled environment.
 \section{Task 3 - Image Mapping}
 \subsection{Introduction}
 \subsection{Solution}
@@ -290,7 +338,30 @@ The first stage of the solution is to find all the pixels that match the colour 
 \appendix
 
 \printbibliography
-%https://handmap.github.io/hsv-vs-rgb/ - RGB vs HSV
+
+
+\onecolumn
+\subsection{Task 1 Testing Images}\label{app:T1}
+\subsection{Task 2 Testing Images}\label{app:T2}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6in]{t2_output2}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=6in]{t2_output3}
+\caption{Single frame of output from Task 2's execution. Note the green target is highlighted in the second frame.}
+\label{fig_t2output}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6in]{t2_graph}
+\caption{Output graph showing the pendulum's deviation from the vertical plotted against time. The raw data and graph is available for edit within the archive.}
+\label{fig_t2graph}
+\end{figure}
+
 
 % that's all folks
 \end{document}
