@@ -10,12 +10,27 @@ int main()
 
     //Path to image file
     string Path = "../Task3/PCB Images/";
-
+    // check both images
+    for(int i=0; i<2;i++){
+        cout << "LOADING IMAGE - ";
+        if( i == 0){
+            cout << "PCB.png" <<endl;
+        }
+        else {
+            cout << "PCB_COMPLETE.png" << endl;
+        }
+        int count = 10;
     //loop through component images
+        Mat PCB;
     for(int n=0; n<10; ++n){
 
         //read PCB and component images
-        Mat PCB = imread(Path+"PCB.png");
+        if(i == 0){
+            PCB = imread(Path+"PCB.png");
+        }
+        else{
+            PCB = imread(Path+"PCB_COMPLETE.png");
+        }
         Mat Component = imread(Path+"Component"+to_string(n)+".png");
 
         //================Your code goes here=====================
@@ -34,21 +49,8 @@ int main()
         cout << minval << endl <<endl;
         if(minval >0.01){
             cout << "Component number " << n<<" not found" << endl;
+            count -= 1;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         //display the results untill x is pressed
         while(waitKey(10)!='x'){
@@ -57,6 +59,9 @@ int main()
             imshow("Result",matchImage);
         }
 
+
+    }
+    cout << "Components present: " << count << "/10" << endl;
     }
 
 }
