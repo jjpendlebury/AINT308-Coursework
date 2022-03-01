@@ -125,6 +125,7 @@ Plymouth, Devon}}
 Machine Vision, OpenCV, Object Tracking, C++
 
 \section{Task 1 - Colour Sorter}
+\textit{For accompanying large figures, see appendix \ref{app:T1}}
 \subsection{Introduction}
 The first task involves creating a system able to label a dataset of car colours red, green, or blue.
 \subsection{Solution}
@@ -185,6 +186,8 @@ Additionally, changing to \textit{HSV} would allow for more colours to be recogn
 This solution is adequate when the dataset is tightly controlled and consists only of red, green, or blue cars, in centre frame, with colour-neutral lighting. Due to the limitations of both the approach and colour space, anything more than marginal performance increases would require significant changes to the methodology. Changing colour space to \textit{HSV} would provide a large increase to accuracy, as well as allow for the solution to be expanded to cover more colours.
 
 \section{Task 2 - Object Tracking}
+\textit{For accompanying large figures, see appendix \ref{app:T2}}
+
 The second task involves tracking a pendulum, and using the observed displacement to calculate the pendulum's angular deviation from it's vertical rest position.
 \subsection{Introduction}
 In order for the angle to be calculated, the pendulum's motion must be tracked. Fortunately, the pendulum arm has a green target affixed to the end. By isolating this colour from the background, and calculating the centre of mass(CoM) using OpenCV's \textit{moments} functionality, the angle can be calculated using trigonometry.
@@ -221,7 +224,7 @@ The centre of mass is calculated using the \textit{moments} function, then displ
 The current angle is calculated by taking the arctangent, or inverse tangent, of the pendulum line.
 
 \begin{equation}
-angle = arctan(pendulum) - \pi /4
+angle = arctan(pendulum) - \frac{\pi}{4}
 \end{equation}
 An offset of $\pi /4$ is added in order to centre the graph around the 0 mark. Additionally, the angle is also displayed in degrees.
 
@@ -243,9 +246,64 @@ As discussed in section \ref{sec:t2_lim}, suggested improvements revolve around 
 While potentially outside the scope of the task, a generalised method for compensating for offset apparatus would increase the validity of the results, and help make any tests performed with this system more repeatable. Software based algorithms exist that can perform this function with minimal latency \cite{5138693}. 
 \subsection{Conclusion}
 As per task one, this solution works extremely well in the controlled environment present in the video, however would need increased robustness - provided either by an increase in target complexity, or additional tracking methods - to succeed in a less controlled environment.
-\section{Task 3 - Image Mapping}
+\section{Task 3 - Cross Correlation}
+\textit{For accompanying large figures, see appendix \ref{app:T3}}
+
+The third task involves using cross correlation to identify if components are present on a PCB.
 \subsection{Introduction}
+Cross correlation in signal processing is used to measure the similarity between two signals, with the result being a function of displacement of the first signal relative to the second. The higher the result, the more closely related the two series are, with a perfect match meaning the two signals are effectively equal\cite{ControlStation}. 
+
+Cross Correlation has numerous applications in image processing, such as searching a large image for a known feature. By using the \textit{OpenCV} \textit{matchTemplate} function, the point on an image that has the highest correlation can be identified, effectively revealing the location of the desired feature. 
 \subsection{Solution}
+The solution uses Normalised Square Difference Matching, presented as the argument \textit{'SQDIFF$\_$NORMED'} in \textit{OpenCV}. Using this matching method, the area with the best match will be presented as a local minima\cite{LearningOpenCV}, the code in figure \ref{fig_t3code} shows \textit{matchloc} being assigned the coordinate value of \textit{minloc}, which is passed by address into the \textit{minMaxLoc} function call.
+
+\begin{equation}
+R_{sq\_diff\_normed} = \frac{\sum_{x',y'}^{}[T(x',y')-I(x+x',y+y')]^2}{\sqrt{\sum_{x',y'}^{}T(x',y')^2 \bullet\sum_{x',y'}^{}I(x+x',y+y')}}
+\end{equation}\label{eq:sq_diff}
+
+\textit{minMaxLoc} is a built-in \textit{OpenCV} function that finds the global minimum and maximum in an array, and their respective positions\cite{OpenCV_minMaxLoc}. The extracted coordinates are used to draw a rectangle around the components position, with the size extracted from the component's associated \textit{png} file.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=2.5in]{t3_code2}
+\end{figure}   
+\begin{figure}[H]
+\centering
+\includegraphics[width=2.5in]{t3_outputTerminal}
+\caption{a) Error value check \\b) associated terminal output.}
+\label{fig_t3code2}
+\end{figure}
+The error threshold in figure \ref{fig_t3code2} was chosen using experimentation. Inspection of the provided PCB image shows \textbf{U13} to be the missing component. This value was chosen by comparing the output values for present components with that of \textbf{U13}, and selecting a threshold that would correct isolate the missing component. 
+
+\begin{table}[]
+\caption{Error values of different components.}
+\label{tab:t3error}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Component} & \textbf{NMSD Error} \\ \hline
+U4                 & 0.000642183         \\ \hline
+C70                & 0.000428351         \\ \hline
+U2                 & 0.000984659         \\ \hline
+L2                 & 0.000689957         \\ \hline
+Q1                 & 0.000671107         \\ \hline
+C97                & 0.000465317         \\ \hline
+C87                & 0.000600116         \\ \hline
+U1                 & 0.00133448          \\ \hline
+U13 (Missing)      & 0.0435289           \\ \hline
+U13 (Present)      & 1.52745e-07         \\ \hline
+L8                 & 0.00050902          \\ \hline
+\end{tabular}
+\end{table}
+
+Table \ref{tab:t3error} shows the comparative error values between different components. It can be seen that the missing component, \textbf{U13}, has an error value an order of magnitude higher than the present components. To test the functionality of the solution, \textbf{U13} was edited back onto the board. The second iteration of the code performs the same checks against the complete board, and correctly identifies all components, reporting that all are found. Figure \ref{fig:t3_missing} shows the results of the second execution, while figure \ref{t3_outputTerminal2} shows the corresponding terminal output.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=2.5in]{t3_outputTerminal2}
+\caption{Terminal output of the second execution, comparing against the complete board.}
+\label{t3_outputTerminal2}
+\end{figure}
+
 \subsection{Limitations}
 \subsection{Further Improvements}
 \subsection{Conclusion}
@@ -341,27 +399,45 @@ As per task one, this solution works extremely well in the controlled environmen
 
 
 \onecolumn
-\subsection{Task 1 Testing Images}\label{app:T1}
-\subsection{Task 2 Testing Images}\label{app:T2}
+\subsection{Task 1 Figures}\label{app:T1}
+\subsection{Task 2 Figures}\label{app:T2}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=6in]{t2_output2}
+\includegraphics[width=5in]{t2_output2}
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[width=6in]{t2_output3}
+\includegraphics[width=5in]{t2_output3}
 \caption{Single frame of output from Task 2's execution. Note the green target is highlighted in the second frame.}
 \label{fig_t2output}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=6in]{t2_graph}
+\includegraphics[width=5in]{t2_graph}
 \caption{Output graph showing the pendulum's deviation from the vertical plotted against time. The raw data and graph is available for edit within the archive.}
 \label{fig_t2graph}
 \end{figure}
+\subsection{Task 3 Figures}\label{app:T3}
+\begin{figure}[H]
+\centering
+\includegraphics[width=5in]{t3_code1}
+\caption{Template matching code, showing use of Normalised Squared Difference Matching.}
+\label{fig_t3code}
+\end{figure}
 
-
+\begin{figure}[H]
+\centering
+\includegraphics[width=5in]{t3_missing}
+\caption{Task 3 output showing the position of \textbf{U13} correctly highlighted as the missing component.}
+\label{fig:t3_missing}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=5in]{t3_complete}
+\caption{The edited PCB image with \textbf{U13} identified.}
+\label{fig:t3_complete}
+\end{figure}
 % that's all folks
 \end{document}

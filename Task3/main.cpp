@@ -35,12 +35,11 @@ int main()
 
         //================Your code goes here=====================
         Mat matchImage;
-        matchTemplate( PCB, Component, matchImage, TM_SQDIFF_NORMED );
-
-        double minval, maxval;
-        Point minloc, maxloc, matchloc;
+        matchTemplate( PCB, Component, matchImage, TM_SQDIFF_NORMED );  //Normed Square Difference Matching
+        double minval, maxval;                                          //Minimum and maximum values
+        Point minloc, maxloc, matchloc;                                 //coordinates for min error, max error, and the match location
         minMaxLoc(matchImage, &minval, &maxval, &minloc, &maxloc);
-        matchloc = minloc;
+        matchloc = minloc;                                              //SQDIFF returns 0 as a perfect match
         rectangle(matchImage, matchloc, Point( matchloc.x + Component.cols, matchloc.y + Component.rows), Scalar(0,0,255), 2, 8, 0);
         rectangle(PCB, matchloc, Point( matchloc.x + Component.cols, matchloc.y + Component.rows), Scalar(0,0,255), 2, 8, 0);
 
