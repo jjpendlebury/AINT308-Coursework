@@ -179,9 +179,9 @@ Additionally, using \textit{RGB} values is extremely limiting for colour recogni
 
 
 \subsection{Further Improvements} \label{sec:further1}
-A major improvement that could be made is switching colour space to \textit{HSV} instead of \textit{RGB}. \textit{HSV} has numerous benefits for colour recognition when compared to \textit{RGB}. \textit{HSV} uses three values to describe a colour: \textit{hue}, \textit{saturation}, and \textit{value}. Light changes will only affect two of these values; the \textit{hue} value remains constant\cite{RBGvHSV}. This is perfect for colour recognition applications as it means changes in lighting, as well as natural minor differences in colours, can be compensated for with much tighter ranges than in any other colour space.
+A major improvement that could be made is switching colour space to \textit{HSV} instead of \textit{RGB}. \textit{HSV} has numerous benefits for colour recognition when compared to \textit{RGB}. \textit{HSV} uses three values to describe a colour: \textit{hue}, \textit{saturation}, and \textit{value}. Light changes will only affect two of these values; the \textit{hue} value remains constant\cite{RBGvHSV}. This is better suited for colour recognition applications as it means changes in lighting, as well as natural minor differences in colours, can be compensated for with much tighter ranges than in any other colour space.
 
-Additionally, changing to \textit{HSV} would allow for more colours to be recognised, as only the colour's \textit{hue} value would need to be programmed in for the algorithm to recognise it. This would allow for theoretically any colour to be recognised, so long as its value is programmed in. In comparison to \textit{RGB}, where as each colour is a mixture of all three channels, this is much simpler to implement.
+Additionally, changing to \textit{HSV} would allow for more colours to be recognised, as only the colour's \textit{hue} value would need to be programmed in for the algorithm to recognise it. This would allow for theoretically any colour to be recognised. In comparison to \textit{RGB}, where as each colour is a mixture of all three channels, this is much simpler to implement.
 \subsection{Conclusion}
 This solution is adequate when the dataset is tightly controlled and consists only of red, green, or blue cars, in centre frame, with colour-neutral lighting. Due to the limitations of both the approach and colour space, anything more than marginal performance increases would require significant changes to the methodology. Changing colour space to \textit{HSV} would provide a large increase to accuracy, as well as allow for the solution to be expanded to cover more colours.
 
@@ -295,7 +295,7 @@ L8                 & 0.00050902          \\ \hline
 \end{tabular}
 \end{table}
 
-Table \ref{tab:t3error} shows the comparative error values between different components. It can be seen that the missing component, \textbf{U13}, has an error value an order of magnitude higher than the present components. To test the functionality of the solution, \textbf{U13} was edited back onto the board. The second iteration of the code performs the same checks against the complete board, and correctly identifies all components, reporting that all are found. Figure \ref{fig:t3_missing} shows the results of the second execution, while figure \ref{t3_outputTerminal2} shows the corresponding terminal output.
+Table \ref{tab:t3error} shows the comparative error values between different components. It can be seen that the missing component, \textbf{U13}, has an error value an order of magnitude higher than the present components. To test the functionality of the solution, \textbf{U13} was edited back onto the board. The second iteration of the code performs the same checks against the complete board, and correctly identifies all components, reporting that all are found. Figure \ref{t3_outputTerminal2} shows the corresponding terminal output , while figure \ref{fig:t3_missing} shows the results of the second execution.
 
 \begin{figure}[H]
 \centering
@@ -303,10 +303,14 @@ Table \ref{tab:t3error} shows the comparative error values between different com
 \caption{Terminal output of the second execution, comparing against the complete board.}
 \label{t3_outputTerminal2}
 \end{figure}
-
 \subsection{Limitations}
+The major limitation of this implementation of template matching is that it does not account for differences in scale or orientation between the images to be matched. This means the images must match exactly, marginal differences in lighting or angle will cause greatly increased error values, potentially enough to cause an object to not be recognised. Whilst scale changes can be controlled for, any non-affine transformations (that is, transformations that do not preserve parallel lines), cannot be. 
 \subsection{Further Improvements}
+Differences in scale between the template image and the image to be searched can be rectified by performing the template match in a loop, wherein the subject image is reduced in size slightly every iteration, until a match is found. This can be augmented by performing edge map detections as opposed to just grey-scale representation, which would reduce issues with lighting changes, however would not help in the case of non-affine transformations\cite{MultiscaleDetection}.
+
+In the case of non-affine transformations, such as distortions in the image, a better approach would be to use an alternative to template matching. One such alternative is to use Local Binary Patterns\cite{He1990TextureCU} to represent the features in the template and the image to be searched as Object Codes, comparing between the two \cite{Shen2013AFA}. This approach has greater performance than standard template matching, and the use of SIFT(Scale Invariant Feature Transform)\cite{SIFT} and SURF (Speeded-Up Robust Features)\cite{BAY2008346} improves performance while allowing the algorithm to correctly identify the features regardless of any transforms applied to it.
 \subsection{Conclusion}
+This solution performs well in the controlled environment, with the template IC images being extracted directly from the source image. Under less than ideal conditions, this solution's performance would quickly drop off, as combinations of noise, image distortions, and changed lighting conditions would affect it. This could be improved by augmenting the template matching with edge map detection, or using a more robust approach such as Object Codes.
 
 
 % An example of a floating figure using the graphicx package.
