@@ -180,6 +180,9 @@ int main(){
                 temp_correct++;
             } else {
                 cout <<"Incorrect - image " << n <<endl;
+                cout << "Blue Count = " << (int)bluecount <<endl;
+                cout << "Green Count = " << (int)greencount <<endl;
+                cout << "Red Count = " << (int)redcount <<endl;
 
                 //display the car image untill x is pressed
                 while(waitKey(10)!='x'){
