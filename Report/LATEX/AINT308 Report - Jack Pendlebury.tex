@@ -4,7 +4,7 @@
 \usepackage[pdftex]{graphicx}
 \graphicspath{ {../images/} }
 \usepackage{caption}
-\usepackage{subfigure}
+\usepackage{subcaption}
 \usepackage{float}
 
 \usepackage{hyperref}
@@ -15,6 +15,9 @@
     urlcolor=blue,
     citecolor=black,
 }
+
+\usepackage{pdfpages}
+
 
 % *** ALIGNMENT PACKAGES ***
 %
@@ -70,7 +73,7 @@
 
 
 
-%\usepackage{stfloats}
+\usepackage{stfloats}
 % stfloats.sty was written by Sigitas Tolusis. This package gives LaTeX2e
 % the ability to do double column floats at the bottom of the page as well
 % as the top. (e.g., "\begin{figure*}[!b]" is not normally possible in
@@ -170,6 +173,7 @@ Blue & 30/30\\
 \end{tabular}
 \end{table}
 
+For an overview of the algorithm's operation, see figure \ref{fig:task2_flowchart}.
 
 
 \subsection{Limitations}
@@ -177,9 +181,41 @@ This solution is extremely limited in its current format. The solution has no fo
 
 Additionally, using \textit{RGB} values is extremely limiting for colour recognition. The algorithm could not be expanded to detect additional colours (such as secondary colours made of a combination of red, green, and blue) without introducing a large amount of error. A major disadvantage of \textit{RGB} values is that they can vary greatly based on the lighting conditions present in the image. Other colour spaces isolate the brightness (or luma) value, allowing for changes in lighting to be compensated for. A further problem with \textit{RGB}'s representation of colour is that the hue is described as a combination of all three values, making it hard to isolate specific colours, as it is extremely rare for any physical colour to exist in purely one colour channel.
 
+\begin{figure}[h!]
+\centering
+\begin{subfigure}{0.225\textwidth}
+    \includegraphics[width=\textwidth]{6}
+    \caption{Image 6 (Green)}
+    \label{fig:first}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.225\textwidth}
+    \includegraphics[width=\textwidth]{25}
+    \caption{Image 25 (Green)}
+    \label{fig:second}
+\end{subfigure}
+
+\begin{subfigure}{0.225\textwidth}
+    \includegraphics[width=\textwidth]{6_stats}
+    \caption{Image 6 pixel count}
+    \label{fig:third}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.225\textwidth}
+    \includegraphics[width=\textwidth]{25_stats}
+    \caption{Image 25 pixel count}
+    \label{fig:fourth}
+\end{subfigure}
+
+\caption{Failed recognition images and stats}
+\label{fig:fails}
+\end{figure}
+
+Figures \ref{fig:first} and \ref{fig:second} show images within the expanded dataset that the algorithm failed to categorise correctly, and their respective pixel counts in \subref{fig:third} and \subref{fig:fourth}. These images were both categorised as red despite the improvements made listed above. This is due to the large amounts of red coloured background elements (the reflection of the brake lights in \subref{fig:first} and the road surface in \subref{fig:second}).
+
 
 \subsection{Further Improvements} \label{sec:further1}
-A major improvement that could be made is switching colour space to \textit{HSV} instead of \textit{RGB}. \textit{HSV} has numerous benefits for colour recognition when compared to \textit{RGB}. \textit{HSV} uses three values to describe a colour: \textit{hue}, \textit{saturation}, and \textit{value}. Light changes will only affect two of these values; the \textit{hue} value remains constant\cite{RBGvHSV}. This is better suited for colour recognition applications as it means changes in lighting, as well as natural minor differences in colours, can be compensated for with much tighter ranges than in any other colour space.
+A major improvement that could be made is switching colour space to \textit{HSV} instead of \textit{RGB}. \textit{HSV} has numerous benefits for colour recognition when compared to \textit{RGB}, which are further elaborated on in section \ref{2_solution}.
 
 Additionally, changing to \textit{HSV} would allow for more colours to be recognised, as only the colour's \textit{hue} value would need to be programmed in for the algorithm to recognise it. This would allow for theoretically any colour to be recognised. In comparison to \textit{RGB}, where as each colour is a mixture of all three channels, this is much simpler to implement.
 \subsection{Conclusion}
@@ -191,8 +227,10 @@ This solution is adequate when the dataset is tightly controlled and consists on
 The second task involves tracking a pendulum, and using the observed displacement to calculate the pendulum's angular deviation from it's vertical rest position.
 \subsection{Introduction}
 In order for the angle to be calculated, the pendulum's motion must be tracked. Fortunately, the pendulum arm has a green target affixed to the end. By isolating this colour from the background, and calculating the centre of mass(CoM) using OpenCV's \textit{moments} functionality, the angle can be calculated using trigonometry.
-\subsection{Solution}
-The first stage of the solution is to find all the pixels that match the colour of the target on the pendulum arm. To do this, the colour space is first converted to \textit{HSV, \textbf{H}ue, \textbf{S}aturation, \textbf{V}alue.} As discussed in section \ref{sec:further1}, \textit{HSV} has numerous benefits over \textit{RGB} for colour recognition, primarily that colours can easily be isolated using the \textit{hue} value, unlike in \textit{RGB} where a colour is dependant on the values of all three channels.
+\subsection{Solution}\label{2_solution}
+The first stage of the solution is to find all the pixels that match the colour of the target on the pendulum arm. To do this, the colour space is first converted to \textit{HSV, \textbf{H}ue, \textbf{S}aturation, \textbf{V}alue.} \textit{HSV} has numerous benefits over \textit{RGB} for colour recognition\cite{RBGvHSV}, primarily that colours can easily be isolated using the \textit{hue} value, unlike in \textit{RGB} where a colour is dependant on the values of all three channels.
+
+ \textit{HSV} uses three values to describe a colour: \textit{hue}, \textit{saturation}, and \textit{value}. Light changes will only affect two of these values; the \textit{hue} value remains constant. This is better suited for colour recognition applications as it means changes in lighting, as well as natural minor differences in colours, can be compensated for with much tighter ranges than in any other colour space.
 
 To isolate the target, \textit{OpenCV}'s \textit{inRange} function is used. This function takes four arguments, an input matrix, a vector of lower bounds, a vector of upper bounds, and then an output matrix. The output matrix is monochrome, highlighting areas that lie within the provided bounds in white, and any that do not fall within these bounds in black. See appendix \ref{app:T2} to see the output of the program.
 
@@ -405,7 +443,18 @@ This solution performs well in the controlled environment, with the template IC 
 
 
 \onecolumn
+\subsection{Github Repository}
+
+For the full code, please see the linked github repository \href{https://github.com/jjpendlebury/AINT308-Coursework}{HERE}.
 \subsection{Task 1 Figures}\label{app:T1}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=5in]{Task1_flowchart}
+\caption{Flowchart showing the Task 1 algorithm}
+\label{fig:task2_flowchart}
+\end{figure}
+
 \subsection{Task 2 Figures}\label{app:T2}
 
 \begin{figure}[H]
@@ -445,5 +494,10 @@ This solution performs well in the controlled environment, with the template IC 
 \caption{The edited PCB image with \textbf{U13} identified.}
 \label{fig:t3_complete}
 \end{figure}
+\subsection{Code Printouts}
+The following pages contain complete printouts of the code used to implement the solutions outlined above, for reference.
+\includepdf[pages=-,offset=0 -50]{task1_code.pdf}
+\includepdf[pages=-,offset=0 -50]{task2_code.pdf}
+\includepdf[pages=-,offset=0 -50]{task3_code.pdf}
 % that's all folks
 \end{document}

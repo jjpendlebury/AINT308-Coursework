@@ -53,10 +53,10 @@ int main()
 
         Moments m = moments(FrameFiltered, true);
         Point p(m.m10/m.m00, m.m01/m.m00);
-        Point p_left(m.m10/m.m00, (m.m01/m.m00)-50);
-        Point p_right(m.m10/m.m00, (m.m01/m.m00)+50);
-        Point p_up((m.m10/m.m00)+50, (m.m01/m.m00));
-        Point p_down((m.m10/m.m00)-50, (m.m01/m.m00));
+        Point p_left(m.m10/m.m00, (m.m01/m.m00)-50);                                            //left of crosshair
+        Point p_right(m.m10/m.m00, (m.m01/m.m00)+50);                                           //right
+        Point p_up((m.m10/m.m00)+50, (m.m01/m.m00));                                            //top
+        Point p_down((m.m10/m.m00)-50, (m.m01/m.m00));                                          //bottom
         //vertical line point
         Point vert_line_end(592,600);
         //text location

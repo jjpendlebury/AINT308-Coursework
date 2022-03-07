@@ -45,10 +45,10 @@ int main(){
                 b = PixelValue[0];
                 g = PixelValue[1];
                 r = PixelValue[2];
-                if ((b>1.5*g) && (b>1.5*r) && (b>125)){
+                if ((b>1.5*g) && (b>1.5*r) && (b>125)){                 //1.5 is the weighting threshold
                     bluecount++;
                     if ((x>cols*(lowlimit)) && (x<cols*(highlimit))){
-                        bluecount = bluecount + 3;
+                        bluecount = bluecount + 3;                      //Enhanced weighting area counts for triple
                     }
                 }
                 else if ((g>1.5*b) && (g>1.5*r) && (g>125)){
@@ -63,13 +63,8 @@ int main(){
                         redcount = redcount +3;
                     }
                 }
-                //cout<<"The blue value at (" <<to_string(y) << ","<<to_string(x) << ") is " <<(int)PixelValue[0]<<endl;
-                //cout<<"The green value at (0,0) is "<<(int)PixelValue[1]<<endl;
-                //cout<<"The red value at (0,0) is "  <<(int)PixelValue[2]<<endl;
             }
-        }
-        ;
-        //Vec3b PixelValue = Car.at<Vec3b>(y,x);
+        };
         cout << "Blue Count = " << (int)bluecount <<endl;
         cout << "Green Count = " << (int)greencount <<endl;
         cout << "Red Count = " << (int)redcount <<endl;
@@ -89,7 +84,6 @@ int main(){
         while(waitKey(10)!='x'){
             imshow("Car", Car);
         }
-
     }
     //testing with expanded dataset
     int blue_correct = 0,green_correct = 0,red_correct = 0,result = 0, temp_correct = 0;
@@ -106,17 +100,9 @@ int main(){
                 PathToFolder = "../Task1/add_red/";
             }
             string PathToImage = PathToFolder+to_string(n)+".png";
-
             cout<<PathToImage<<endl;
-
             //Load car image at the file paths location
             Mat Car=imread(PathToImage);
-
-            //Your code goes here. The example code below shows you how to read the red, green, and blue colour values of the
-            //pixel at position (0,0). Modify this section to check not just one pixel, but all of them in the 640x480 image
-            //(using for-loops), and using the RGB values classifiy if a given pixel looks red, green, blue, or other.
-
-            //==============example code, feel free to delete=============
             int rows, cols;                                                 //variables to hold the size of the matrix
             int bluecount = 0,greencount = 0,redcount = 0;                  //pixel counts
             double lowlimit = 0.2,highlimit=0.8;                            //limits for the enhanced weighting area
@@ -152,30 +138,17 @@ int main(){
                             redcount = redcount +3;
                         }
                     }
-                    //cout<<"The blue value at (" <<to_string(y) << ","<<to_string(x) << ") is " <<(int)PixelValue[0]<<endl;
-                    //cout<<"The green value at (0,0) is "<<(int)PixelValue[1]<<endl;
-                    //cout<<"The red value at (0,0) is "  <<(int)PixelValue[2]<<endl;
                 }
-            }
-            ;
-            //Vec3b PixelValue = Car.at<Vec3b>(y,x);
-            //cout << "Blue Count = " << (int)bluecount <<endl;
-            //cout << "Green Count = " << (int)greencount <<endl;
-            //cout << "Red Count = " << (int)redcount <<endl;
+            };
             if ((bluecount>greencount) && (bluecount>redcount)){
-                //cout<<"This car is blue" <<endl;
                 result = 0;
             }
             else if ((greencount>bluecount) && (greencount>redcount)){
-                //cout<<"This car is green" <<endl;
                 result = 1;
             }
             else {
-                //cout<<"This car is red" <<endl;
                 result = 2;
             }
-
-            //see if the result is correct
             if (p == result){
                 temp_correct++;
             } else {
@@ -189,12 +162,8 @@ int main(){
                     imshow("Car", Car);
                 }
             }
-
-            //============================================================
-
-
         }
-        //offload temp result into thex correct result variable
+        //offload temp result into the correct result variable
         if (p==0){
             blue_correct = temp_correct;
         } else if (p==1){

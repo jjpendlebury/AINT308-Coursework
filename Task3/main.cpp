@@ -43,24 +43,19 @@ int main()
         rectangle(matchImage, matchloc, Point( matchloc.x + Component.cols, matchloc.y + Component.rows), Scalar(0,0,255), 2, 8, 0);
         rectangle(PCB, matchloc, Point( matchloc.x + Component.cols, matchloc.y + Component.rows), Scalar(0,0,255), 2, 8, 0);
 
-
         cout << matchloc << endl;
         cout << minval << endl <<endl;
         if(minval >0.01){
             cout << "Component number " << n<<" not found" << endl;
             count -= 1;
         }
-
         //display the results untill x is pressed
         while(waitKey(10)!='x'){
             imshow("Target", Component);
             imshow("PCB", PCB);
             imshow("Result",matchImage);
         }
-
-
     }
     cout << "Components present: " << count << "/10" << endl;
     }
-
 }
