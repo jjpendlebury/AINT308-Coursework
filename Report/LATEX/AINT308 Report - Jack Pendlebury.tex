@@ -226,7 +226,7 @@ This solution is adequate when the dataset is tightly controlled and consists on
 
 The second task involves tracking a pendulum, and using the observed displacement to calculate the pendulum's angular deviation from it's vertical rest position.
 \subsection{Introduction}
-In order for the angle to be calculated, the pendulum's motion must be tracked. Fortunately, the pendulum arm has a green target affixed to the end. By isolating this colour from the background, and calculating the centre of mass(CoM) using OpenCV's \textit{moments} functionality, the angle can be calculated using trigonometry.
+In order for the angle to be calculated, the pendulum's motion must be tracked. Fortunately, the pendulum arm has a green target affixed to the end. By isolating this colour from the background, and calculating the centre of mass (CoM) using OpenCV's \textit{moments} functionality, the angle can be calculated using trigonometry.
 \subsection{Solution}\label{2_solution}
 The first stage of the solution is to find all the pixels that match the colour of the target on the pendulum arm. To do this, the colour space is first converted to \textit{HSV, \textbf{H}ue, \textbf{S}aturation, \textbf{V}alue.} \textit{HSV} has numerous benefits over \textit{RGB} for colour recognition\cite{RBGvHSV}, primarily that colours can easily be isolated using the \textit{hue} value, unlike in \textit{RGB} where a colour is dependant on the values of all three channels.
 
