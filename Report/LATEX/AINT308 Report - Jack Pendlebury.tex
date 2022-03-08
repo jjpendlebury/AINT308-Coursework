@@ -270,7 +270,7 @@ An offset of $\pi /4$ is added in order to centre the graph around the 0 mark. A
 angle = x*(180/\pi )
 \end{equation}
 
-Figure \ref{fig_t2graph} within appendix \ref{app:T2} shows the output graph. Comparing the output graph to the observed behaviour of the systems shows that the results are as expected, with the pendulum acting equivalently to a dampened system returning to its rest state after receiving a stimulus.
+The calculated angle was written to a CSV file, which was then used to produce a graph, seen in figure \ref{fig_t2graph} within appendix \ref{app:T2}. Comparing the output graph to the observed behaviour of the systems shows that the results are as expected, with the pendulum acting equivalently to a dampened system returning to its rest state after receiving a stimulus.
 
 \subsection{Limitations}\label{sec:t2_lim}
 This implementation of object tracking does have its limitations. Firstly, it relies on the tracked target being a known colour, and also no other objects of a similar colour being observed by the input. This could be improved by using an additional technique to identify the target, for example, looking for a unique shape using edge detection, or making the target more complex than a single colour, such as two colours in a tiled pattern.
@@ -482,6 +482,13 @@ For the full code, please see the linked github repository \href{https://github.
 \label{fig_t2graph}
 \end{figure}
 \subsection{Task 3 Figures}\label{app:T3}
+\begin{figure}[H]
+\centering
+\includegraphics[width=4in]{Task3_flowchart}
+\caption{Flowchart showing the Task 3 algorithm}
+\label{fig:task2_flowchart}
+\end{figure}
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=5in]{t3_code1}
