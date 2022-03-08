@@ -129,6 +129,8 @@ Machine Vision, OpenCV, Object Tracking, C++
 
 \section{Task 1 - Colour Sorter}
 \textit{For accompanying large figures, see appendix \ref{app:T1}}
+
+\textit{For the video demo, click \href{https://youtu.be/kQwU62_2fdQ}{HERE}}
 \subsection{Introduction}
 The first task involves creating a system able to label a dataset of car colours red, green, or blue.
 \subsection{Solution}
@@ -141,7 +143,7 @@ As part of its suite of features, \textbf{OpenCV} includes the ability to retrie
 \label{fig_t1code}
 \end{figure}
 
-The code in figure \ref{fig_t1code} performs the checks needed to assertain a pixel's primary colour. Initial attempts simply checked which of three component values were highest. In practice, this method was inaccurate as it had no way to differentiate between  between a near-white cell (such as a background cloud) which would have near equal \textit{RGB} values, and one that belonged to the subject (in this case, the car).
+The code in figure \ref{fig_t1code} performs the checks needed to ascertain a pixel's primary colour. Initial attempts simply checked which of three component values were highest. In practice, this method was inaccurate as it had no way to differentiate between  between a near-white cell (such as a background cloud) which would have near equal \textit{RGB} values, and one that belonged to the subject (in this case, the car).
 
 To allow the algorithm to differentiate between background elements and the subject, two methods were employed. Firstly, a pixel was only counted if that colour's value was a significant margin higher than the other values. In figure \ref{fig_t1code} this margin is $50\%$. Additionally, the pixel's value must be greater than half the colour space's maximum value, in this case 125. This prevents background objects from being counted.
 
@@ -224,6 +226,8 @@ This solution is adequate when the dataset is tightly controlled and consists on
 \section{Task 2 - Object Tracking}
 \textit{For accompanying large figures, see appendix \ref{app:T2}}
 
+\textit{For the video demo, click \href{https://youtu.be/kW5fbNTTovo}{HERE}}
+
 The second task involves tracking a pendulum, and using the observed displacement to calculate the pendulum's angular deviation from it's vertical rest position.
 \subsection{Introduction}
 In order for the angle to be calculated, the pendulum's motion must be tracked. Fortunately, the pendulum arm has a green target affixed to the end. By isolating this colour from the background, and calculating the centre of mass (CoM) using OpenCV's \textit{moments} functionality, the angle can be calculated using trigonometry.
@@ -270,7 +274,7 @@ An offset of $\pi /4$ is added in order to centre the graph around the 0 mark. A
 angle = x*(180/\pi )
 \end{equation}
 
-The calculated angle was written to a CSV file, which was then used to produce a graph, seen in figure \ref{fig_t2graph} within appendix \ref{app:T2}. Comparing the output graph to the observed behaviour of the systems shows that the results are as expected, with the pendulum acting equivalently to a dampened system returning to its rest state after receiving a stimulus.
+The calculated angle was written to a CSV file, figure \ref{fig:csv} which was then used to produce a graph, seen in figure \ref{fig_t2graph} within appendix \ref{app:T2}. Comparing the output graph to the observed behaviour of the systems shows that the results are as expected, with the pendulum acting equivalently to a dampened system returning to its rest state after receiving a stimulus.
 
 \subsection{Limitations}\label{sec:t2_lim}
 This implementation of object tracking does have its limitations. Firstly, it relies on the tracked target being a known colour, and also no other objects of a similar colour being observed by the input. This could be improved by using an additional technique to identify the target, for example, looking for a unique shape using edge detection, or making the target more complex than a single colour, such as two colours in a tiled pattern.
@@ -289,6 +293,8 @@ As per task one, this solution works extremely well in the controlled environmen
 \section{Task 3 - Cross Correlation}
 \textit{For accompanying large figures, see appendix \ref{app:T3}}
 
+\textit{For the video demo, click \href{https://youtu.be/Cwiae5Vpxyg}{HERE}}
+
 The third task involves using cross correlation to identify if components are present on a PCB.
 \subsection{Introduction}
 Cross correlation in signal processing is used to measure the similarity between two signals, with the result being a function of displacement of the first signal relative to the second. The higher the result, the more closely related the two series are, with a perfect match meaning the two signals are effectively equal\cite{ControlStation}. 
@@ -297,11 +303,13 @@ Cross Correlation has numerous applications in image processing, such as searchi
 \subsection{Solution}
 The solution uses Normalised Square Difference Matching, presented as the argument \textit{'SQDIFF$\_$NORMED'} in \textit{OpenCV}. Using this matching method, the area with the best match will be presented as a local minima\cite{LearningOpenCV}, the code in figure \ref{fig_t3code} shows \textit{matchloc} being assigned the coordinate value of \textit{minloc}, which is passed by address into the \textit{minMaxLoc} function call.
 
+
+\textit{minMaxLoc} is a built-in \textit{OpenCV} function that finds the global minimum and maximum in an array, and their respective positions\cite{OpenCV_minMaxLoc}. The extracted coordinates are used to draw a rectangle around the components position, with the size extracted from the component's associated \textit{png} file.
+
 \begin{equation}
 R_{sq\_diff\_normed} = \frac{\sum_{x',y'}^{}[T(x',y')-I(x+x',y+y')]^2}{\sqrt{\sum_{x',y'}^{}T(x',y')^2 \bullet\sum_{x',y'}^{}I(x+x',y+y')}}
 \end{equation}\label{eq:sq_diff}
 
-\textit{minMaxLoc} is a built-in \textit{OpenCV} function that finds the global minimum and maximum in an array, and their respective positions\cite{OpenCV_minMaxLoc}. The extracted coordinates are used to draw a rectangle around the components position, with the size extracted from the component's associated \textit{png} file.
 
 \begin{figure}[H]
 \centering
@@ -474,13 +482,20 @@ For the full code, please see the linked github repository \href{https://github.
 \caption{Single frame of output from Task 2's execution. Note the green target is highlighted in the second frame.}
 \label{fig_t2output}
 \end{figure}
-
+\begin{figure}[H]
+\centering
+\includegraphics[width=1in]{csv}
+\caption{Snippet of the CSV file that data is written to, showing the deviation measured in the first twelve frames of video.}
+\label{fig:csv}
+\end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=5in]{t2_graph}
 \caption{Output graph showing the pendulum's deviation from the vertical plotted against time. The raw data and graph is available for edit within the archive.}
 \label{fig_t2graph}
 \end{figure}
+
+
 \subsection{Task 3 Figures}\label{app:T3}
 \begin{figure}[H]
 \centering
