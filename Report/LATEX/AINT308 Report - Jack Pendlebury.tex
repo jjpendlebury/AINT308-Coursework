@@ -146,7 +146,7 @@ The code in figure \ref{fig_t1code} performs the checks needed to assertain a pi
 To allow the algorithm to differentiate between background elements and the subject, two methods were employed. Firstly, a pixel was only counted if that colour's value was a significant margin higher than the other values. In figure \ref{fig_t1code} this margin is $50\%$. Additionally, the pixel's value must be greater than half the colour space's maximum value, in this case 125. This prevents background objects from being counted.
 
 
-Additionally, extra weighting is applied to pixels within a central rectangle on the screen. This area can be changed by editing the values $highlimit$ and $lowlimit$. By adding this additional weighting to central areas, background areas are further discounted, helping to prevent false positives by valuing true positives more.
+Additionally, extra weighting is applied to pixels within a central rectangular region of interest on the screen. This area can be changed by editing the values $highlimit$ and $lowlimit$. By adding this additional weighting to central areas, background areas are further discounted, helping to prevent false positives by valuing true positives more.
 
 With the provided testing dataset of thirty red, blue, or green cars this solution is 100$\%$ accurate, correctly identifying the subject's colour in every image. This is a marked improvement from the simple method used in the initial attempt, which would often get confused at reflections in windows (these would be reflecting the sky, which would add bias towards blue), background walls (especially brick, which would bias the results towards red), and any natural backgrounds (adding green bias).
 
