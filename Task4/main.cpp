@@ -89,21 +89,16 @@ int main(int argc, char** argv)
 
 //380,250 <- coords to extract
 
-
-
-
-
-
-
-
-
-
-
-
-
         //display images untill x is pressed
         int key=0;
-        cout << (int)disp16bit.at<ushort>(250,380) << endl;
+        int intensity_avg = 0;
+        for (int i = 0;i < 3;i++){
+            for (int j = 0; j < 3; j++){
+                intensity_avg += (int)disp16bit.at<ushort>(249+i,379+j);
+            }
+        }
+        intensity_avg /= 9;
+        cout << intensity_avg << endl;
         while(waitKey(10)!='x')
         {
             imshow("left", Left);
