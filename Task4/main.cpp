@@ -69,11 +69,13 @@ int main(int argc, char** argv)
     sgbm->setMode(StereoSGBM::MODE_SGBM);
 
     //==================================================Main Program Loop================================================
-    int ImageNum=30; //current image index
+    int ImageNum=0; //current image index
     while (1){
         //Load images from file (needs changing for known distance targets)
-        Mat Left =imread("../Task4/Distance Targets/left" +to_string(ImageNum)+"cm.jpg");
-        Mat Right=imread("../Task4/Distance Targets/right"+to_string(ImageNum)+"cm.jpg");
+        //Mat Left =imread("../Task4/Distance Targets/left" +to_string(ImageNum)+"cm.jpg");
+        //Mat Right=imread("../Task4/Distance Targets/right"+to_string(ImageNum)+"cm.jpg");
+        Mat Left =imread("../Task4/Unknown Targets/left" +to_string(ImageNum)+".jpg");
+        Mat Right=imread("../Task4/Unknown Targets/right"+to_string(ImageNum)+".jpg");
         cout<<"Loaded image: "<<ImageNum<<endl;
 
         //Distort image to correct for lens/positional distortion
@@ -86,7 +88,7 @@ int main(int argc, char** argv)
         disp16bit.convertTo(disp8bit, CV_8U, 255/(numberOfDisparities*16.)); //Convert disparity map to an 8-bit greyscale image so it can be displayed (Only for imshow, do not use for disparity calculations)
 
         //==================================Your code goes here===============================
-
+        int BF = 62426;
 //380,250 <- coords to extract
 
         //display images untill x is pressed
@@ -99,6 +101,8 @@ int main(int argc, char** argv)
         }
         intensity_avg /= 9;
         cout << intensity_avg << endl;
+        int distance_prediction = BF/intensity_avg;
+        cout << distance_prediction <<"cm" << endl;
         while(waitKey(10)!='x')
         {
             imshow("left", Left);
@@ -108,10 +112,10 @@ int main(int argc, char** argv)
         }
 
         //move to next image
-        ImageNum+=10;
-        if(ImageNum>150)
+        ImageNum+=1;
+        if(ImageNum>7)
         {
-            ImageNum=30;
+            ImageNum=0;
         }
     }
 
