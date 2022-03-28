@@ -42,7 +42,20 @@ int main()
         }
 
         //==========================Your code goes here==========================
-
+        Mat CanFrame;
+        int lowerThreshold = 50, upperThreshold = 100;
+        double rhoRes = 1;
+        double thetaRes = M_PI/180;
+        int HoughThreshold = 275;
+        Canny(Frame, CanFrame, lowerThreshold, upperThreshold);
+        vector<Vec2f> lines;
+        cout << "cheese1" << endl;
+        HoughLines(CanFrame, lines, rhoRes, thetaRes, HoughThreshold, 0 ,0 );
+        cout << "cheese1.5" << endl;
+        for (int i =0;i < lines.size(); i++) {
+            lineRT(Frame,lines[i],Scalar(0,0,255),5);
+        }
+        cout << "cheese2" << endl;
 
 
 
