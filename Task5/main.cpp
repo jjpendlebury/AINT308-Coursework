@@ -42,20 +42,29 @@ int main()
         }
 
         //==========================Your code goes here==========================
-        Mat CanFrame;
+
+        Mat CanFrame, GreyFrame, BlurFrame;
         int lowerThreshold = 50, upperThreshold = 100;
         double rhoRes = 1;
         double thetaRes = M_PI/180;
         int HoughThreshold = 275;
-        Canny(Frame, CanFrame, lowerThreshold, upperThreshold);
+        cvtColor(Frame, GreyFrame,COLOR_BGR2GRAY);  //greyscale, get rid of useless colour info
+        blur(GreyFrame,BlurFrame, Size(3,3));
+        Canny(BlurFrame, CanFrame, lowerThreshold, upperThreshold);
         vector<Vec2f> lines;
-        cout << "cheese1" << endl;
-        HoughLines(CanFrame, lines, rhoRes, thetaRes, HoughThreshold, 0 ,0 );
-        cout << "cheese1.5" << endl;
-        for (int i =0;i < lines.size(); i++) {
-            lineRT(Frame,lines[i],Scalar(0,0,255),5);
-        }
+        vector<Vec4f> lines2;
+        //HoughLines(CanFrame, lines, rhoRes, thetaRes, HoughThreshold, 0 ,0 );
+        cout << "cheese" << endl;
+        HoughLinesP(CanFrame, lines2, rhoRes, thetaRes, 120, 125 ,20 );
         cout << "cheese2" << endl;
+        //for (int i =0;i < lines.size(); i++) {
+         //   lineRT(Frame,lines[i],Scalar(0,0,255),5);
+        //}
+        for( size_t i = 0; i < lines2.size(); i++ )
+            {
+                Vec4i l = lines2[i];
+                line( Frame, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, LINE_AA);
+            }
 
 
 
