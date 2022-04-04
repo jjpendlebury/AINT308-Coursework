@@ -42,26 +42,12 @@ int main()
         }
 
         //==========================Your code goes here==========================
-        int HueLower=0;
-        int HueUpper=500;
-        int SatLower=0;
-        int SatUpper=25;
-        int ValLower=0;
-        int ValUpper=255;
 
         Mat CanFrame, GreyFrame, BlurFrame;
         int lowerThreshold = 50, upperThreshold = 100;
         double rhoRes = 1;
         double thetaRes = M_PI/180;
         int HoughThreshold = 275;
-
-        Mat FrameHSV;
-        cvtColor(Frame,FrameHSV,COLOR_BGR2HSV); //convert to HSV
-        Mat FrameFiltered;
-        Vec3b LowerBound(HueLower, SatLower, ValLower);
-        Vec3b UpperBound(HueUpper, SatUpper, ValUpper);
-        inRange(FrameHSV, LowerBound, UpperBound, FrameFiltered);
-
         cvtColor(Frame, GreyFrame,COLOR_BGR2GRAY);  //greyscale, get rid of useless colour info
         blur(GreyFrame,BlurFrame, Size(3,3));
         Canny(BlurFrame, CanFrame, lowerThreshold, upperThreshold);
@@ -69,21 +55,39 @@ int main()
         vector<Vec4f> lines2;
         //HoughLines(CanFrame, lines, rhoRes, thetaRes, HoughThreshold, 0 ,0 );
         cout << "cheese" << endl;
-        //HoughLinesP(CanFrame, lines2, rhoRes, thetaRes, 120, 125 ,20 );
+        HoughLinesP(CanFrame, lines2, rhoRes, thetaRes, 120, 125 ,20 );
         cout << "cheese2" << endl;
         //for (int i =0;i < lines.size(); i++) {
          //   lineRT(Frame,lines[i],Scalar(0,0,255),5);
         //}
-//        for( size_t i = 0; i < lines2.size(); i++ )
-//            {
-//                Vec4i l = lines2[i];
-//                line( Frame, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, LINE_AA);
-//            }
+        for( size_t i = 0; i < lines2.size(); i++ )
+            {
+                Vec4i l = lines2[i];
+                line( Frame, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, LINE_AA);
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //display frame
-        imshow("Video", FrameFiltered);
+        imshow("Video", Frame);
         waitKey(10);
     }
 }
 
-// look at https://medium.com/@mrhwick/simple-lane-detection-with-opencv-bfeb6ae54ec0 for ideas
+
 
