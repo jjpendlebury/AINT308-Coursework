@@ -42,13 +42,26 @@ int main()
         }
 
         //==========================Your code goes here==========================
+        int height = Frame.size().height;
+        int width = Frame.size().width;
+        vector<Point> region_of_interest_vertices(3);   //define region of interest
+        region_of_interest_vertices = {
+                Point(0, height),
+                Point(width / 2, height / 2),
+                Point(width, height),
+            };
 
-        Mat CanFrame, GreyFrame, BlurFrame;
+        Mat CanFrame, GreyFrame, BlurFrame, MaskFrame;
+        //Mat Mask = Mat::zeros(Size(width,height),Frame.channels());
+        //draw triangle mask
+        //fillConvexPoly(Mask, region_of_interest_vertices, Scalar(255,255,255));
+        //bitwise_and(Frame,Mask,MaskFrame);
         int lowerThreshold = 50, upperThreshold = 100;
         double rhoRes = 1;
         double thetaRes = M_PI/180;
         int HoughThreshold = 275;
-        cvtColor(Frame, GreyFrame,COLOR_BGR2GRAY);  //greyscale, get rid of useless colour info
+
+        //cvtColor(MaskFrame, GreyFrame,COLOR_BGR2GRAY);  //greyscale, get rid of useless colour info
         blur(GreyFrame,BlurFrame, Size(3,3));
         Canny(BlurFrame, CanFrame, lowerThreshold, upperThreshold);
         vector<Vec2f> lines;
