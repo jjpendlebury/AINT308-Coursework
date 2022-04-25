@@ -42,29 +42,28 @@ int main()
         }
 
         //==========================Your code goes here==========================
-
+        //Point start(0,0), end(0,BlurFrame.cols);
         Mat CanFrame, GreyFrame, BlurFrame;
         int lowerThreshold = 50, upperThreshold = 100;
         double rhoRes = 1;
         double thetaRes = M_PI/180;
-        int HoughThreshold = 275;
+        int HoughThreshold = 212;
         cvtColor(Frame, GreyFrame,COLOR_BGR2GRAY);  //greyscale, get rid of useless colour info
         blur(GreyFrame,BlurFrame, Size(3,3));
+        Point start(0,0), end(BlurFrame.cols,350);
+        rectangle(BlurFrame,start,end, Scalar(255,255,255), -1);
         Canny(BlurFrame, CanFrame, lowerThreshold, upperThreshold);
         vector<Vec2f> lines;
         vector<Vec4f> lines2;
         HoughLines(CanFrame, lines, rhoRes, thetaRes, HoughThreshold, 0 ,0 );
         cout << "cheese" << endl;
-        HoughLinesP(CanFrame, lines2, rhoRes, thetaRes, 120, 125 ,20 );
-        cout << "cheese2" << endl;
         for (int i =0;i < lines.size(); i++) {
+            //angle check
+            if((lines[i][0]<-230) ||(lines[i][0]>600)){
            lineRT(Frame,lines[i],Scalar(255,0,0),1);
         }
-        for( size_t i = 0; i < lines2.size(); i++ )
-            {
-                Vec4i l = lines2[i];
-                line( Frame, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 1, LINE_AA);
-            }
+        }
+
 
 
 
@@ -85,6 +84,7 @@ int main()
 
         //display frame
         imshow("Video", Frame);
+        //imshow("can",CanFrame);
         waitKey(10);
     }
 }
