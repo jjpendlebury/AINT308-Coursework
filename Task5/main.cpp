@@ -53,17 +53,17 @@ int main()
         Canny(BlurFrame, CanFrame, lowerThreshold, upperThreshold);
         vector<Vec2f> lines;
         vector<Vec4f> lines2;
-        //HoughLines(CanFrame, lines, rhoRes, thetaRes, HoughThreshold, 0 ,0 );
+        HoughLines(CanFrame, lines, rhoRes, thetaRes, HoughThreshold, 0 ,0 );
         cout << "cheese" << endl;
         HoughLinesP(CanFrame, lines2, rhoRes, thetaRes, 120, 125 ,20 );
         cout << "cheese2" << endl;
-        //for (int i =0;i < lines.size(); i++) {
-         //   lineRT(Frame,lines[i],Scalar(0,0,255),5);
-        //}
+        for (int i =0;i < lines.size(); i++) {
+           lineRT(Frame,lines[i],Scalar(255,0,0),1);
+        }
         for( size_t i = 0; i < lines2.size(); i++ )
             {
                 Vec4i l = lines2[i];
-                line( Frame, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, LINE_AA);
+                line( Frame, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 1, LINE_AA);
             }
 
 
