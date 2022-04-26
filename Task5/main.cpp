@@ -56,35 +56,98 @@ int main()
         vector<Vec2f> lines;
         vector<Vec4f> lines2;
         HoughLines(CanFrame, lines, rhoRes, thetaRes, HoughThreshold, 0 ,0 );
-        cout << "cheese" << endl;
-        for (int i =0;i < lines.size(); i++) {
-            //angle check
-            if((lines[i][0]<-230) ||(lines[i][0]>600)){
-           lineRT(Frame,lines[i],Scalar(255,0,0),1);
+        //temporal differencing to reduce jitter
+        //set-up variables
+
+        int y = 0;
+        int x;
+        int LineBottom = Frame.rows -1;
+        int LineTop = Frame.rows - 300;
+        vector< Point> corners;
+        int workx[4]={0};
+        int prevx[4]={0};
+        int currx[4]={4};
+        double upperbound = 1.01;
+        double lowerbound = 0.99;
+
+
+
+
+        for (unsigned int i = 0; i < lines.size(); i++) {
+            //check the angle - only want to render the vertical lines
+            if((lines[i][0] < -230)||lines[i][0] > 690){
+                for(int g = Frame.rows; g > Frame.rows - 300; g--){
+                    y = g;
+                    //temporal differencing to reduce differ
+                    for(unsigned int k = 0; k < lines.size(); k++){
+                        if(lines[k][1]<=1){
+                            x = (lines[k][0]/cos(lines[k][1]) - (y*tan(lines[k][1])));
+                            currx[0] = (lines[k][0]/cos(lines[k][1]) - (LineTop*tan(lines[k][1])));
+                            currx[2] = (lines[k][0]/cos(lines[k][1]) - (LineBottom*tan(lines[k][1])));
+
+
+                            if ((currx[0] >= lowerbound*prevx[0])&&(currx[0] <= upperbound*prevx[0])){
+                                workx[0] = prevx[0] * 0.9 + currx[0] * 0.1;
+                            } else {
+                                workx[0] = prevx[0];
+                            }
+
+                            if ((currx[2] >= lowerbound*prevx[2])&&(currx[2] <= upperbound*prevx[2])){
+                                workx[2] = prevx[2] * 0.9 + currx[2] * 0.1;
+
+                            } else {
+                                workx[2] = prevx[2];
+                            }
+                            prevx[0] = currx[0];
+                            prevx[2] = currx[2];
+                        } else if(lines[k][1]>=2.3){
+                            x = (lines[k][0]/cos(lines[k][1]) - (y*tan(lines[k][1])));
+                            currx[1] = (lines[k][0]/cos(lines[k][1]) - (LineTop*tan(lines[k][1])));
+                            currx[3] = (lines[k][0]/cos(lines[k][1]) - (LineBottom*tan(lines[k][1])));
+                            if ((currx[1] >= lowerbound*prevx[1])&&(currx[1] <= upperbound*prevx[1])){
+                                workx[1] = prevx[1] * 0.9 + currx[1] * 0.1;
+
+                            } else {
+                                workx[1] = prevx[1];
+                            }
+
+                            if ((currx[3] >= lowerbound*prevx[3])&&(currx[3] <= upperbound*prevx[3])){
+                                workx[3] = prevx[3] * 0.9 + currx[3] * 0.1;
+
+                            } else {
+                                workx[3] = prevx[3];
+                            }
+                            prevx[1] = currx[1];
+                            prevx[3] = currx[3];
+                        } else {x = 0;}
+                        if(x != 0){
+                        }
+                    }
+                }
+
+                //push back onto corners vector
+                corners.push_back(Point(workx[0], LineTop));
+                corners.push_back(Point(workx[1], LineTop));
+                corners.push_back(Point(workx[3], LineBottom));
+                corners.push_back(Point(workx[2], LineBottom));
+
+                //midpoint coords
+                Point topMid (((workx[0]+workx[1]) / 2), LineTop);
+                Point btmMid (((workx[2]+workx[3]) / 2), LineBottom);
+
+                line(Frame, topMid, btmMid, Scalar(255,0,0), 2);
+
+                Mat overlay;
+                double alpha = 0.2;
+                Frame.copyTo(overlay);
+                const Point *pts = (const cv::Point*) Mat(corners).data;
+                int npts = Mat(corners).rows;
+                fillPoly(overlay, &pts, &npts, 1, Scalar(0, 255, 0));
+                addWeighted(overlay, alpha, Frame, 1 - alpha, 0, Frame);
+
+            }
         }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //display frame
         imshow("Video", Frame);
-        //imshow("can",CanFrame);
         waitKey(10);
     }
 }
