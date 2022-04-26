@@ -69,13 +69,25 @@ int main(int argc, char** argv)
     sgbm->setMode(StereoSGBM::MODE_SGBM);
 
     //==================================================Main Program Loop================================================
-    int ImageNum=0; //current image index
+    enum MODE {CALIBRATION, EXECUTION};
+    MODE current_mode = EXECUTION;
+    int ImageNum=0;
+    if (current_mode == CALIBRATION){
+        ImageNum=30; //current image index
+    } else {
+        ImageNum = 0;
+    }
+
     while (1){
         //Load images from file (needs changing for known distance targets)
-        //Mat Left =imread("../Task4/Distance Targets/left" +to_string(ImageNum)+"cm.jpg");
-        //Mat Right=imread("../Task4/Distance Targets/right"+to_string(ImageNum)+"cm.jpg");
-        Mat Left =imread("../Task4/Unknown Targets/left" +to_string(ImageNum)+".jpg");
-        Mat Right=imread("../Task4/Unknown Targets/right"+to_string(ImageNum)+".jpg");
+        Mat Left,Right;
+        if (current_mode == CALIBRATION){
+            Left =imread("../Task4/Distance Targets/left" +to_string(ImageNum)+"cm.jpg");
+            Right=imread("../Task4/Distance Targets/right"+to_string(ImageNum)+"cm.jpg");
+        } else {
+            Left =imread("../Task4/Unknown Targets/left" +to_string(ImageNum)+".jpg");
+            Right=imread("../Task4/Unknown Targets/right"+to_string(ImageNum)+".jpg");
+        }
         cout<<"Loaded image: "<<ImageNum<<endl;
 
         //Distort image to correct for lens/positional distortion
@@ -89,11 +101,10 @@ int main(int argc, char** argv)
 
         //==================================Your code goes here===============================
         int BF = 62426;
-//380,250 <- coords to extract
+        //380,250 <- coords to extract
 
         //display images untill x is pressed
-        int key=0;
-        int intensity_avg = 0;
+        double intensity_avg = 0;
         for (int i = 0;i < 3;i++){
             for (int j = 0; j < 3; j++){
                 intensity_avg += (int)disp16bit.at<ushort>(249+i,379+j);
@@ -101,7 +112,7 @@ int main(int argc, char** argv)
         }
         intensity_avg /= 9;
         cout << intensity_avg << endl;
-        int distance_prediction = BF/intensity_avg;
+        double distance_prediction = BF/intensity_avg;
         cout << distance_prediction <<"cm" << endl;
         while(waitKey(10)!='x')
         {
@@ -112,10 +123,17 @@ int main(int argc, char** argv)
         }
 
         //move to next image
-        ImageNum+=1;
-        if(ImageNum>7)
-        {
-            ImageNum=0;
+        if (current_mode == CALIBRATION){
+            ImageNum+=10;
+            if(ImageNum>150)
+            {
+                ImageNum=30;
+            }
+        } else {
+            ImageNum +=1;
+            if (ImageNum>7){
+                ImageNum=0;
+            }
         }
     }
 
