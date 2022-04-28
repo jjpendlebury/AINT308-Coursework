@@ -149,9 +149,57 @@ To estimate the distance of an object from the camera, the disparity is used. By
 
 Semi-Global Block Matching (SGBM) is used to generate a disparity map. SGBM takes a small region in one image, and searches in nearby locations in the other image for matches. The disparity is the minimum distance needed to find a match. Sum of Absolute Differences (SAD) is used to calculate the similarity\cite{Stereo_Block_Matching}. The value of each pixel in the template section is subtracted from the respective pixel in the target section, then these differences are summed. The lower the value, the closer the match. It should be noted that before this operation, the images are converted to greyscale, to minimise the amount of data needed to be processed, as each pixel can be represented as a single 8-bit value.
 
- 
+\begin{equation} \label{eq:disparity}
+Disparity = \frac{B \bullet f}{Distance}
+\end{equation}
+\begin{equation} \label{eq:BF}
+B \bullet f = Distance \bullet Disparity
+\end{equation}
+
+To use the \textit{Disparity-Distance} formula, the unknown parameter $B \bullet f$ needed to be derived using the supplied known distances. The pixel $(280,350)$ was chosen as the approximate centre of the target in the known distance images, and it's intensity extracted. To reduce the likelihood of errors, an average of a 3x3 grid was taken. The results can be seen in Table \ref{tab:intensity_results}. Using equations \ref{eq:disparity} and \ref{eq:BF}, it is possible to approximate the value of $B \bullet f = 62426$. Derivation of the values of $B$ and $f$ individually is not necessary for the task.
 
 
+
+\begin{table}[]
+\caption{Intensity Readings At Known Distances}
+\label{tab:intensity_results}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Distance} & \textbf{Single Pixel Avg} & \textbf{3x3 Avg} \\ \hline
+30                 & 2094 & 2093         \\ \hline
+40                & 1566 & 1565         \\ \hline
+50                 & 1245 & 1245         \\ \hline
+60                 & 1040 & 1040         \\ \hline
+70                 & 896 & 896         \\ \hline
+80                & 784 & 783         \\ \hline
+90                & 703 & 703         \\ \hline
+100                 & 632 & 631          \\ \hline
+110      & 576 & 576           \\ \hline
+120      & 514 & 513         \\ \hline
+130                 & 480 &479          \\ \hline
+140				& 432	& 432	\\ \hline
+150				&	414 & 414	\\ \hline
+\end{tabular}
+\end{table} 
+
+\begin{table}[]
+\begin{tabular}{lllll}
+\textbf{Distance} & \textbf{Validation} & \textbf{Error} & \textbf{Program Result} & \textbf{Program Error} \\
+30                & 29.82616046         & 0.58\%         & 29.8134                 & 0.62\%                 \\
+40                & 39.8889162          & 0.28\%         & 39.8747                 & 0.31\%                 \\
+50                & 50.14148903         & -0.28\%        & 50.1235                 & -0.25\%                \\
+60                & 60.02514793         & -0.04\%        & 60.025                  & -0.04\%                \\
+70                & 69.6720467          & 0.47\%         & 69.6632                 & 0.48\%                 \\
+80                & 79.72688869         & 0.34\%         & 79.6928                 & 0.38\%                 \\
+90                & 88.79964985         & 1.33\%         & 88.7714                 & 1.37\%                 \\
+100               & 98.93209801         & 1.07\%         & 98.8448                 & 1.16\%                 \\
+110               & 108.3787393         & 1.47\%         & 108.378                 & 1.47\%                 \\
+120               & 121.6884091         & -1.41\%        & 121.556                 & -1.30\%                \\
+130               & 130.3259997         & -0.25\%        & 130.175                 & -0.13\%                \\
+140               & 144.5049858         & -3.22\%        & 144.356                 & -3.11\%                \\
+150               & 150.7878112         & -0.53\%        & 150.747                 & -0.50\%               
+\end{tabular}
+\end{table}
 %\begin{figure}[H]
 %\centering
 %\includegraphics[width=2.5in]{t1}
