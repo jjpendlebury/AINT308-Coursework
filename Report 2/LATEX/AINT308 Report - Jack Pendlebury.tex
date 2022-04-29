@@ -104,7 +104,7 @@
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{AINT308 - Machine Vision and Behavioural Computing\\Coursework 1 Report}
+\title{AINT308 - Machine Vision and Behavioural Computing\\Coursework 2 Report}
 
 
 % author names and affiliations
@@ -183,21 +183,22 @@ To use the \textit{Disparity-Distance} formula, the unknown parameter $B \bullet
 \end{table} 
 
 \begin{table}[]
-\begin{tabular}{lllll}
-\textbf{Distance} & \textbf{Validation} & \textbf{Error} & \textbf{Program Result} & \textbf{Program Error} \\
-30                & 29.82616046         & 0.58\%         & 29.8134                 & 0.62\%                 \\
-40                & 39.8889162          & 0.28\%         & 39.8747                 & 0.31\%                 \\
-50                & 50.14148903         & -0.28\%        & 50.1235                 & -0.25\%                \\
-60                & 60.02514793         & -0.04\%        & 60.025                  & -0.04\%                \\
-70                & 69.6720467          & 0.47\%         & 69.6632                 & 0.48\%                 \\
-80                & 79.72688869         & 0.34\%         & 79.6928                 & 0.38\%                 \\
-90                & 88.79964985         & 1.33\%         & 88.7714                 & 1.37\%                 \\
-100               & 98.93209801         & 1.07\%         & 98.8448                 & 1.16\%                 \\
-110               & 108.3787393         & 1.47\%         & 108.378                 & 1.47\%                 \\
-120               & 121.6884091         & -1.41\%        & 121.556                 & -1.30\%                \\
-130               & 130.3259997         & -0.25\%        & 130.175                 & -0.13\%                \\
-140               & 144.5049858         & -3.22\%        & 144.356                 & -3.11\%                \\
-150               & 150.7878112         & -0.53\%        & 150.747                 & -0.50\%               
+\caption{Program results and error rate}
+\begin{tabular}{|l|l|l|}
+\textbf{Distance} & \textbf{Program Result} & \textbf{Program Error} \\ \hline
+30                & 29.8134                 & 0.62\%                 \\ \hline
+40                & 39.8747                 & 0.31\%                 \\ \hline
+50                & 50.1235                 & -0.25\%                \\ \hline
+60                & 60.025                  & -0.04\%                \\ \hline
+70                & 69.6632                 & 0.48\%                 \\ \hline
+80                & 79.6928                 & 0.38\%                 \\ \hline
+90                & 88.7714                 & 1.37\%                 \\ \hline
+100               & 98.8448                 & 1.16\%                 \\ \hline
+110               & 108.378                 & 1.47\%                 \\ \hline
+120               & 121.556                 & -1.30\%                \\ \hline
+130               & 130.175                 & -0.13\%                \\ \hline
+140               & 144.356                 & -3.11\%                \\ \hline
+150               & 150.747                 & -0.50\%               
 \end{tabular}
 \end{table}
 %\begin{figure}[H]
@@ -379,7 +380,26 @@ L8                 & 0.00050902          \\ \hline
 
 For the full code, please see the linked github repository \href{https://github.com/jjpendlebury/AINT308-Coursework}{HERE}.
 \subsection{Task 4 Figures}\label{app:T4}
-
+\begin{table}[]
+\caption{Full results of the intensity testing}
+\label{tab:T4_full}
+\begin{tabular}{lllll}
+\textbf{Distance} & \textbf{Validation} & \textbf{Error} & \textbf{Program Result} & \textbf{Program Error} \\
+30                & 29.82616046         & 0.58\%         & 29.8134                 & 0.62\%                 \\
+40                & 39.8889162          & 0.28\%         & 39.8747                 & 0.31\%                 \\
+50                & 50.14148903         & -0.28\%        & 50.1235                 & -0.25\%                \\
+60                & 60.02514793         & -0.04\%        & 60.025                  & -0.04\%                \\
+70                & 69.6720467          & 0.47\%         & 69.6632                 & 0.48\%                 \\
+80                & 79.72688869         & 0.34\%         & 79.6928                 & 0.38\%                 \\
+90                & 88.79964985         & 1.33\%         & 88.7714                 & 1.37\%                 \\
+100               & 98.93209801         & 1.07\%         & 98.8448                 & 1.16\%                 \\
+110               & 108.3787393         & 1.47\%         & 108.378                 & 1.47\%                 \\
+120               & 121.6884091         & -1.41\%        & 121.556                 & -1.30\%                \\
+130               & 130.3259997         & -0.25\%        & 130.175                 & -0.13\%                \\
+140               & 144.5049858         & -3.22\%        & 144.356                 & -3.11\%                \\
+150               & 150.7878112         & -0.53\%        & 150.747                 & -0.50\%               
+\end{tabular}
+\end{table}
 
 \subsection{Task 5 Figures}\label{app:T5}
 

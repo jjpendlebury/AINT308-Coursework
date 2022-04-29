@@ -75,7 +75,7 @@ int main()
 
         for (unsigned int i = 0; i < lines.size(); i++) {
             //check the angle - only want to render the vertical lines
-            if((lines[i][0] < -230)||lines[i][0] > 690){
+            //if((lines[i][0] < -230)||lines[i][0] > 690){
                 for(int g = Frame.rows; g > Frame.rows - 300; g--){
                     y = g;
                     //temporal differencing to reduce differ
@@ -145,7 +145,7 @@ int main()
                 fillPoly(overlay, &pts, &npts, 1, Scalar(0, 255, 0));
                 addWeighted(overlay, alpha, Frame, 1 - alpha, 0, Frame);
 
-            }
+            //}
         }
         imshow("Video", Frame);
         waitKey(10);
