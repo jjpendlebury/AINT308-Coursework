@@ -26,6 +26,8 @@ int main()
 
     //Open video file
     VideoCapture CarVideo("../Task5/DashCam.mp4");
+    //VideoCapture CarVideo("../Task5/road.mp4");
+    //VideoCapture CarVideo("../Task5/Media2.mp4");
     if(!CarVideo.isOpened()){
         cout<<"Error opening video"<<endl;
         return -1;
@@ -50,7 +52,7 @@ int main()
         int HoughThreshold = 212;
         cvtColor(Frame, GreyFrame,COLOR_BGR2GRAY);  //greyscale, get rid of useless colour info
         blur(GreyFrame,BlurFrame, Size(3,3));
-        Point start(0,0), end(BlurFrame.cols,350);
+        Point start(0,0), end(BlurFrame.cols,BlurFrame.rows/2);
         rectangle(BlurFrame,start,end, Scalar(255,255,255), -1);
         Canny(BlurFrame, CanFrame, lowerThreshold, upperThreshold);
         vector<Vec2f> lines;
@@ -119,8 +121,8 @@ int main()
                             }
                             prevx[1] = currx[1];
                             prevx[3] = currx[3];
-                        } else {x = 0;}
-                        if(x != 0){
+                        } else {
+                            x = 0;
                         }
                     }
                 }
@@ -147,7 +149,9 @@ int main()
 
             //}
         }
+        imshow("Can", CanFrame);
         imshow("Video", Frame);
+        imshow("Grey",BlurFrame);
         waitKey(10);
     }
 }

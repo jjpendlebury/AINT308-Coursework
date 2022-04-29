@@ -155,10 +155,15 @@ Disparity = \frac{B \bullet f}{Distance}
 \begin{equation} \label{eq:BF}
 B \bullet f = Distance \bullet Disparity
 \end{equation}
+\begin{equation}	\label{eq:Distance}
+Distance = \frac{B\bullet f}{Disparity}
+\end{equation}
 
-To use the \textit{Disparity-Distance} formula, the unknown parameter $B \bullet f$ needed to be derived using the supplied known distances. The pixel $(280,350)$ was chosen as the approximate centre of the target in the known distance images, and it's intensity extracted. To reduce the likelihood of errors, an average of a 3x3 grid was taken. The results can be seen in Table \ref{tab:intensity_results}. Using equations \ref{eq:disparity} and \ref{eq:BF}, it is possible to approximate the value of $B \bullet f = 62426$. Derivation of the values of $B$ and $f$ individually is not necessary for the task.
+To use the \textit{Disparity-Distance} formula, the unknown parameter $B \bullet f$ needed to be derived using the supplied known distances. The pixel $(280,350)$ was chosen as the approximate centre of the target in the known distance images, and it's intensity extracted. To reduce the likelihood of errors, an average of a 3x3 grid was taken. The results can be seen in Table \ref{tab:intensity_results}. Using equations \ref{eq:disparity} and \ref{eq:BF}, it is possible to approximate the value of $B \bullet f = 62426$. Derivation of the values of $B$ and $f$ individually is not necessary for the task. 
 
+Table \ref{tab:t4_partial} shows the error results at different distances, with the maximum error being a 3.11\% is within the 5\% margin of error.
 
+To make the guesses on the distance to the target in the unknown image, the same process is repeated. The unknown image pairs are read in, and are grey-scaled before using SGBM to produce a disparity map. The retrieved average intensity is used in Equation \ref{eq:Distance} to produce an estimate for the distance to the target. The results can be seen in Table \ref{tab:t4_guesses}. 
 
 \begin{table}[]
 \caption{Intensity Readings At Known Distances}
@@ -184,7 +189,9 @@ To use the \textit{Disparity-Distance} formula, the unknown parameter $B \bullet
 
 \begin{table}[]
 \caption{Program results and error rate}
+\label{tab:t4_partial}
 \begin{tabular}{|l|l|l|}
+\hline
 \textbf{Distance} & \textbf{Program Result} & \textbf{Program Error} \\ \hline
 30                & 29.8134                 & 0.62\%                 \\ \hline
 40                & 39.8747                 & 0.31\%                 \\ \hline
@@ -198,7 +205,24 @@ To use the \textit{Disparity-Distance} formula, the unknown parameter $B \bullet
 120               & 121.556                 & -1.30\%                \\ \hline
 130               & 130.175                 & -0.13\%                \\ \hline
 140               & 144.356                 & -3.11\%                \\ \hline
-150               & 150.747                 & -0.50\%               
+150               & 150.747                 & -0.50\%                \\	\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[]
+\caption{Distance estimates for unknown image pairs}
+\label{tab:t4_guesses}
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{1}{|l|}{\textbf{Image \#}} & \textbf{Distance Value} \\	\hline
+0                                       & 105.193                 \\	\hline
+1                                       & 59.1529                 \\	\hline
+2                                       & 114.754                 \\	\hline
+3                                       & 151.847                 \\	\hline
+4                                       & 49.4572                 \\	\hline
+5                                       & 134.862                 \\	\hline
+6                                       & 28.9247                 \\	\hline
+7                                       & 83.3458                 \\	\hline
 \end{tabular}
 \end{table}
 %\begin{figure}[H]
@@ -209,47 +233,21 @@ To use the \textit{Disparity-Distance} formula, the unknown parameter $B \bullet
 %\end{figure}
 
 \subsection{Limitations}
-
-%\begin{figure}[h!]
-%\centering
-%\begin{subfigure}{0.225\textwidth}
-%    \includegraphics[width=\textwidth]{6}
-%    \caption{Image 6 (Green)}
-%    \label{fig:first}
-%\end{subfigure}
-%\hfill
-%\begin{subfigure}{0.225\textwidth}
-%    \includegraphics[width=\textwidth]{25}
-%    \caption{Image 25 (Green)}
-%    \label{fig:second}
-%\end{subfigure}
-%
-%\begin{subfigure}{0.225\textwidth}
-%    \includegraphics[width=\textwidth]{6_stats}
-%    \caption{Image 6 pixel count}
-%    \label{fig:third}
-%\end{subfigure}
-%\hfill
-%\begin{subfigure}{0.225\textwidth}
-%    \includegraphics[width=\textwidth]{25_stats}
-%    \caption{Image 25 pixel count}
-%    \label{fig:fourth}
-%\end{subfigure}
-%
-%\caption{Failed recognition images and stats}
-%\label{fig:fails}
-%\end{figure}
+Given that the system displayed accurate results with the known dataset, and that without the true distances of the unknown dataset performance cannot be conclusively verified, the system performed to specifications. It is difficult to identify limitations given the limited scope of testing, and lack of access to additional testing materials.
 
 \subsection{Further Improvements} \label{sec:further1}
+ This system's performance is directly tied to the quality of it's calibration, so more accurate calibration data would benefit it's performance. This could be done by having less clutter in the calibration images. Ideally, they would be shot on a plain background, with the only difference being the target moving. Additionally, the distance of the target could be measured with a more accurate and precise instrument, to further ensure the quality of the calibration.
  
+One disadvantage of using SGBM is that it is very processing intensive, especially as the size of the area to be searched increases. Performing SGBM on larger images on less powerful hardware may not be possible in real-time. To alleviate this, Field Programmable Gate Arrays (FPGAs) can be used to create bespoke hardware capable of performing the SGBM at high speeds\cite{Hardware_SGBM}.
 \subsection{Conclusion}
+The system performed extremely well, correctly identifying every target distance with a sub 5\% error rate. It can be said that the task was a success, despite not knowing the performance when estimating the unknown targets, due to the performance with the testing targets. This demonstrates that disparity and parallax can be used to calculate distance to a target using a simple software solution, and \textit{OpenCV}. 
 
-\section{Task 2 - Object Tracking}
+\section{Task 5 - Lane Tracking}
 \textit{For accompanying large figures, see appendix \ref{app:T5}}
 
 \textit{For the video demo, click \href{https://youtu.be/kW5fbNTTovo}{HERE}}
 
-The second task involves tracking a pendulum and using the observed displacement to calculate the pendulum's angular deviation from its vertical rest position.
+The second task involves using edge detection to correctly identify the current lane in a piece of dashboard camera footage. 
 \subsection{Introduction}
 
 \subsection{Solution}\label{2_solution}
