@@ -97,7 +97,7 @@
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-\usepackage[backend=bibtex,style=numeric,sorting=none]{biblatex}
+\usepackage[style=numeric,sorting=none]{biblatex}
 \addbibresource{AINT308.bib}
 
 \begin{document}
@@ -147,7 +147,7 @@ The generated calibration data is loaded into the program, and used to distort t
 
 To estimate the distance of an object from the camera, the disparity is used. By using the parallax of the two stereo cameras combined with the disparity mapping the approximate distance of the object can be triangulated. This is similar to how the human brain estimates distance using \textit{binocular disparity}\cite{10.3389/fpsyg.2014.00870}\cite{BERRYHILL2012525}, and is another example of how robotics emulates life in order to mimic functionality. Similar techniques are used by astronomers to measure the distance to stellar objects\cite{parallax}.
 
-Semi-Global Block Matching (SGBM) is used to generate a disparity map. SGBM takes a small region in one image, and searches in nearby locations in the other image for matches. The disparity is the minimum distance needed to find a match. Sum of Absolute Differences (SAD) is used to calculate the similarity\cite{Stereo_Block_Matching}. The value of each pixel in the template section is subtracted from the respective pixel in the target section, then these differences are summed. The lower the value, the closer the match. It should be noted that before this operation, the images are converted to greyscale, to minimise the amount of data needed to be processed, as each pixel can be represented as a single 8-bit value.
+Semi-Global Block Matching (SGBM) is used to generate a disparity map. SGBM takes a small region in one image, and searches in nearby locations in the other image for matches. The disparity is the minimum distance needed to find a match. Sum of Absolute Differences (SAD) is used to calculate the similarity\cite{StereoBlockMatching}. The value of each pixel in the template section is subtracted from the respective pixel in the target section, then these differences are summed. The lower the value, the closer the match. It should be noted that before this operation, the images are converted to greyscale, to minimise the amount of data needed to be processed, as each pixel can be represented as a single 8-bit value.
 
 \begin{equation} \label{eq:disparity}
 Disparity = \frac{B \bullet f}{Distance}
@@ -238,7 +238,7 @@ Given that the system displayed accurate results with the known dataset, and tha
 \subsection{Further Improvements} \label{sec:further1}
  This system's performance is directly tied to the quality of it's calibration, so more accurate calibration data would benefit it's performance. This could be done by having less clutter in the calibration images. Ideally, they would be shot on a plain background, with the only difference being the target moving. Additionally, the distance of the target could be measured with a more accurate and precise instrument, to further ensure the quality of the calibration.
  
-One disadvantage of using SGBM is that it is very processing intensive, especially as the size of the area to be searched increases. Performing SGBM on larger images on less powerful hardware may not be possible in real-time. To alleviate this, Field Programmable Gate Arrays (FPGAs) can be used to create bespoke hardware capable of performing the SGBM at high speeds\cite{Hardware_SGBM}.
+One disadvantage of using SGBM is that it is very processing intensive, especially as the size of the area to be searched increases. Performing SGBM on larger images on less powerful hardware may not be possible in real-time. To alleviate this, Field Programmable Gate Arrays (FPGAs) can be used to create bespoke hardware capable of performing the SGBM at high speeds\cite{HardwareSGBM}.
 \subsection{Conclusion}
 The system performed extremely well, correctly identifying every target distance with a sub 5\% error rate. It can be said that the task was a success, despite not knowing the performance when estimating the unknown targets, due to the performance with the testing targets. This demonstrates that disparity and parallax can be used to calculate distance to a target using a simple software solution, and \textit{OpenCV}. 
 
@@ -249,12 +249,17 @@ The system performed extremely well, correctly identifying every target distance
 
 The second task involves using edge detection to correctly identify the current lane in a piece of dashboard camera footage. 
 \subsection{Introduction}
-
+Giving computers the ability to recognise lines has many potential applications, one of the foremost being for self-driving cars and other related applications. Edge detection is one method of letting computers recognise lines, and in this application will be used to recognise lane demarcations on roads, using dashboard camera footage as a testing medium.
 \subsection{Solution}\label{2_solution}
+After loading in a frame of video data, \textit{OpenCV's} \verb|cvtColour| function is used, to convert the image to greyscale. For this implementation, colour information is not necessary, and while it's loss does reduce the efficacy of edge-detection \cite{GreyVSColor}, the solution still performed adequately.  
 
-\begin{equation}
-angle = x*(180/\pi )
-\end{equation}
+When performing edge detection, it is important to apply filtering to smooth the image, and remove noise. Noise may cause contiguous edges to be picked up as many, smaller edges.  To do this, \textit{OpenCV's} \verb|blur| function is used. At it's default settings, \verb|blur| employs a variable sized normalized box filter to smooth an image\cite{BlurDocs}. $3$x$3$ was chosen, too large a kernel and the more granular details of the image would be lost, whereas too small a kernel would mean the smoothing had very little effect on the image.
+
+RECTANGLE
+
+CANNY
+
+HOUGHLINES
 
 
 \subsection{Limitations}\label{sec:t2_lim}
