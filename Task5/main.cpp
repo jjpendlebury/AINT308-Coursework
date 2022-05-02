@@ -61,8 +61,8 @@ int main()
         //temporal differencing to reduce jitter
         //set-up variables
 
-        int y = 0;
-        int x;
+        //int y = 0;
+        //int x;
         int LineBottom = Frame.rows -1;
         int LineTop = Frame.rows - 300;
         vector< Point> corners;
@@ -77,13 +77,10 @@ int main()
 
         for (unsigned int i = 0; i < lines.size(); i++) {
             //check the angle - only want to render the vertical lines
-            //if((lines[i][0] < -230)||lines[i][0] > 690){
                 for(int g = Frame.rows; g > Frame.rows - 300; g--){
-                    y = g;
                     //temporal differencing to reduce differ
                     for(unsigned int k = 0; k < lines.size(); k++){
                         if(lines[k][1]<=1){
-                            x = (lines[k][0]/cos(lines[k][1]) - (y*tan(lines[k][1])));
                             currx[0] = (lines[k][0]/cos(lines[k][1]) - (LineTop*tan(lines[k][1])));
                             currx[2] = (lines[k][0]/cos(lines[k][1]) - (LineBottom*tan(lines[k][1])));
 
@@ -103,7 +100,7 @@ int main()
                             prevx[0] = currx[0];
                             prevx[2] = currx[2];
                         } else if(lines[k][1]>=2.3){
-                            x = (lines[k][0]/cos(lines[k][1]) - (y*tan(lines[k][1])));
+                            //x = (lines[k][0]/cos(lines[k][1]) - (y*tan(lines[k][1])));
                             currx[1] = (lines[k][0]/cos(lines[k][1]) - (LineTop*tan(lines[k][1])));
                             currx[3] = (lines[k][0]/cos(lines[k][1]) - (LineBottom*tan(lines[k][1])));
                             if ((currx[1] >= lowerbound*prevx[1])&&(currx[1] <= upperbound*prevx[1])){
@@ -121,8 +118,6 @@ int main()
                             }
                             prevx[1] = currx[1];
                             prevx[3] = currx[3];
-                        } else {
-                            x = 0;
                         }
                     }
                 }
@@ -149,9 +144,9 @@ int main()
 
             //}
         }
-        imshow("Can", CanFrame);
+        //imshow("Can", CanFrame);
         imshow("Video", Frame);
-        imshow("Grey",BlurFrame);
+        //imshow("Grey",BlurFrame);
         waitKey(10);
     }
 }

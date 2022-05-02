@@ -97,7 +97,7 @@
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-\usepackage[style=numeric,sorting=none]{biblatex}
+\usepackage[backend = bibtex,style=numeric,sorting=none]{biblatex}
 \addbibresource{AINT308.bib}
 
 \begin{document}
@@ -255,11 +255,13 @@ After loading in a frame of video data, \textit{OpenCV's} \verb|cvtColour| funct
 
 When performing edge detection, it is important to apply filtering to smooth the image, and remove noise. Noise may cause contiguous edges to be picked up as many, smaller edges.  To do this, \textit{OpenCV's} \verb|blur| function is used. At it's default settings, \verb|blur| employs a variable sized normalized box filter to smooth an image\cite{BlurDocs}. $3$x$3$ was chosen, too large a kernel and the more granular details of the image would be lost, whereas too small a kernel would mean the smoothing had very little effect on the image.
 
-RECTANGLE
+During operation, the edge detection would detect false positives in the tree line. This effect is unavoidable, no matter what parameters for the edge detection are used. To avoid this, a rectangular overlay is added to the video feed, blocking the top half of the video. This overlay prevents the upper half of the image from going though the edge detection algorithm, and consequently stops false-positives in the tree-line from being detected.
 
-CANNY
+The solution uses Canny edge detection in order to detect the lines within the target image. \textit{OpenCV} implements Canny edge detection using the \verb|Canny| function\cite{8265710}, which takes in an input and output frame as well as an upper and lower threshold, \verb|upperThreshold| and \verb|lowerThreshold|. Changing the threshold values changes the sensitivity of the edge detection. The final values chosen in the solution are $50$ and $100$. Different values were experimented with, however the main factor that changed the performance of the solution was the Hough Lines parameters, discussed below. 
 
-HOUGHLINES
+A Hough Lines transform can be used to detect straight lines. The \textit{OpenCV} implementation allows for two different variations, a \textit{Standard Hough Lines Transform} and a \textit{Probabilistic Hough Lines Transform}. The standard transform allows for detection of straight lines and is highly resistant to noise \cite{4608701}. The probabilistic transform is more efficient, as it only calculates part of the transform, and is able to handle curved lines and segmented lines better. However, it is less resistant to noise, and with the limited pre-processing performed worse than its standard counterpart. See FIGURE WHATEVER for a comparison between the two variations. 
+
+With the vector of lines detected by the Hough Transform, rendering can begin. The solution makes use of \textit{Temporal Smoothing}\cite{TemporalSmoothing} in order to reduce the amount of jitter between frames. Jitter means the displayed lane boundaries would jump, which is undesirable behaviour and could have negative effects towards the safety of the end user. Temporal Smoothing works by checking the new (current frame) coordinates against the old (previous frame) coordinates. If the change is greater than the threshold, then it is reduced to 10\% of the difference, and then the line is rendered. This greatly reduces the amount of jitter, improving the quality of the lane detection. 
 
 
 \subsection{Limitations}\label{sec:t2_lim}
