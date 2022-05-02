@@ -131,7 +131,7 @@ int main()
                 //midpoint coords
                 Point topMid (((workx[0]+workx[1]) / 2), LineTop);
                 Point btmMid (((workx[2]+workx[3]) / 2), LineBottom);
-
+                //centreline
                 line(Frame, topMid, btmMid, Scalar(255,0,0), 2);
 
                 Mat overlay;
@@ -141,8 +141,6 @@ int main()
                 int npts = Mat(corners).rows;
                 fillPoly(overlay, &pts, &npts, 1, Scalar(0, 255, 0));
                 addWeighted(overlay, alpha, Frame, 1 - alpha, 0, Frame);
-
-            //}
         }
         //imshow("Can", CanFrame);
         imshow("Video", Frame);

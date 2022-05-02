@@ -97,7 +97,8 @@
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-\usepackage[backend = bibtex,style=numeric,sorting=none]{biblatex}
+\usepackage[style=numeric,sorting=none]{biblatex}
+%\usepackage[backend = bibtex,style=numeric,sorting=none]{biblatex}
 \addbibresource{AINT308.bib}
 
 \begin{document}
@@ -263,6 +264,23 @@ A Hough Lines transform can be used to detect straight lines. The \textit{OpenCV
 
 With the vector of lines detected by the Hough Transform, rendering can begin. The solution makes use of \textit{Temporal Smoothing}\cite{TemporalSmoothing} in order to reduce the amount of jitter between frames. Jitter means the displayed lane boundaries would jump, which is undesirable behaviour and could have negative effects towards the safety of the end user. Temporal Smoothing works by checking the new (current frame) coordinates against the old (previous frame) coordinates. If the change is greater than the threshold, then it is reduced to 10\% of the difference, and then the line is rendered. This greatly reduces the amount of jitter, improving the quality of the lane detection. 
 
+Equations \ref{eq:line} and \ref{eq:line_para} are both equations that represent lines, non-parametric and parametric respectively. In the parametric equation, $\rho$ represents the perpendicular distance from the line to the origin, and $\theta$ is the angle between the perpendicular and the horizontal axis, measured counter-clockwise\cite{HoughRT}. Representing lines parametrically avoids undefined computational behaviour present in the standard model when lines are completely vertical or horizontal. 
+\begin{equation}\label{eq:line}
+y = mx + c
+\end{equation}
+\begin{equation}\label{eq:line_para}
+\rho = x \cos\theta + y \cos\theta
+\end{equation}
+
+The solution only renders lines that meet one of the following constrains: \begin{itemize}
+\item[] $\rho \leq 1$
+\item[] \textbf{OR}
+\item[] $\rho \geq 2.3$
+\end{itemize} This only renders lines that fall close to the vertical, of which the majority of the lane demarcations do. This effectively eliminates most of the false positive results, such as lines detected on passing cars, as well as the lower edge of the overlay rectangle.
+
+Once the Temporal Smoothing has occurred, the calculated coordinates are pushed into the \verb|corners| vector, that stores the edges of the polygon to be drawn showing the correct lane. \verb|topMid| and \verb|btmMid| are the endpoints of the centre line, calculated using the corners of the boundary polygon.
+
+To draw the translucent boundary polygon on to the video frame two \textit{OpenCV} functions are used: \verb|fillPoly| and \verb|addWeighted|. \verb|fillPoly| uses an array of points in order to fill an area with a specified colour\cite{fillPoly}. A new matrix \verb|overlay| is created, and the current frame 
 
 \subsection{Limitations}\label{sec:t2_lim}
 
