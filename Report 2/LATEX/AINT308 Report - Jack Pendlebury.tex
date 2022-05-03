@@ -136,7 +136,7 @@ Machine Vision, OpenCV, Object Tracking, C++
 
 \textit{For the video demo, click \href{https://youtu.be/kQwU62_2fdQ}{HERE}}
 \subsection{Introduction}
-This task demonstrates the use of disparity maps in order to estimate the distance from the camera to an object.
+This task demonstrates the use of disparity maps in order to estimate the distance from a stereo vision system to an object.
 \subsection{Solution}
 An important first step when working with stereo visions systems is to account for distortions in the image. This can be induced by a number of factors, including both distortions caused by the camera itself as well as distortions caused by a human element of the operation of the camera\cite{Distortions}.
 
@@ -146,11 +146,11 @@ There are multiple methods for performing the calibration. MATLAB's implementati
 
 The calibration function uses pairs of chequerboard images, and generates sets of \textit{intrinsic} and \textit{extrinsic} parameters. The \textit{intrinsic} parameters contains the focal length, principal point, and skew coefficient, all of which are distortion sources local to the camera. The extrinsic parameters store the rotation and translation between the two cameras. 
 
-The generated calibration data is loaded into the program, and used to distort the images in order to correct the distortion created. With perfect calibration, the two distortions will completely cancel out, leaving a perfect fidelity image. \textit{OpenCV's} \textit{remap}\cite{remap} function is used to perform the correct. The \textit{remap} function takes in an input array as well as up to two maps to perform the re-mapping, in this case the input image and the two generated maps created using the intrinsic and extrinsic parameters, outputting the results to a destination array\cite{remap_docs}.
+The generated calibration data is loaded into the program, and used to distort the images in order to correct the distortion created. With perfect calibration, the two distortions will completely cancel out, leaving a perfect fidelity image. \textit{OpenCV's} \verb|remap|\cite{remap} function is used to perform the correct. The \verb|remap| function takes in an input array as well as up to two maps to perform the re-mapping, in this case the input image and the two generated maps created using the intrinsic and extrinsic parameters, outputting the results to a destination array\cite{remap_docs}.
 
 To estimate the distance of an object from the camera, the disparity is used. By using the parallax of the two stereo cameras combined with the disparity mapping the approximate distance of the object can be triangulated. This is similar to how the human brain estimates distance using \textit{binocular disparity}\cite{10.3389/fpsyg.2014.00870}\cite{BERRYHILL2012525}, and is another example of how robotics emulates life in order to mimic functionality. Similar techniques are used by astronomers to measure the distance to stellar objects\cite{parallax}.
 
-Semi-Global Block Matching (SGBM) is used to generate a disparity map. SGBM takes a small region in one image, and searches in nearby locations in the other image for matches. The disparity is the minimum distance needed to find a match. Sum of Absolute Differences (SAD) is used to calculate the similarity\cite{StereoBlockMatching}. The value of each pixel in the template section is subtracted from the respective pixel in the target section, then these differences are summed. The lower the value, the closer the match. It should be noted that before this operation, the images are converted to greyscale, to minimise the amount of data needed to be processed, as each pixel can be represented as a single 8-bit value.
+Semi-Global Block Matching (SGBM) is used to generate a disparity map. SGBM takes a small region in one image, and searches in nearby locations in the other image for matches. The disparity is the minimum distance needed to find a match. Sum of Absolute Differences (SAD) is used to calculate the similarity\cite{StereoBlockMatching}. The value of each pixel in the template section is subtracted from the respective pixel in the target section, then these differences are summed. The lower the value, the closer the match. It should be noted that before this operation, the images are converted to grey scale, to minimise the amount of data needed to be processed, as each pixel can be represented as a single 8-bit value.
 
 \begin{equation} \label{eq:disparity}
 Disparity = \frac{B \bullet f}{Distance}
@@ -260,10 +260,29 @@ When performing edge detection, it is important to apply filtering to smooth the
 
 During operation, the edge detection would detect false positives in the tree line. This effect is unavoidable, no matter what parameters for the edge detection are used. To avoid this, a rectangular overlay is added to the video feed, blocking the top half of the video. This overlay prevents the upper half of the image from going though the edge detection algorithm, and consequently stops false-positives in the tree-line from being detected.
 
-The solution uses Canny edge detection in order to detect the lines within the target image. \textit{OpenCV} implements Canny edge detection using the \verb|Canny| function\cite{8265710}, which takes in an input and output frame as well as an upper and lower threshold, \verb|upperThreshold| and \verb|lowerThreshold|. Changing the threshold values changes the sensitivity of the edge detection. The final values chosen in the solution are $50$ and $100$. Different values were experimented with, however the main factor that changed the performance of the solution was the Hough Lines parameters, discussed below. 
+The solution uses Canny edge detection in order to detect the lines within the target image. \textit{OpenCV} implements Canny edge detection using the \verb|Canny| function\cite{8265710}, which takes in an input and output frame as well as an upper and lower threshold, \verb|upperThreshold| and \verb|lowerThreshold|. Figure \ref{fig:Canny} shows the output of Canny edge detection on an example video frame. Changing the threshold values changes the sensitivity of the edge detection. The final values chosen in the solution are $50$ and $100$. Different values were experimented with, however the main factor that changed the performance of the solution was the Hough Lines parameters, discussed below. 
 
-A Hough Lines transform can be used to detect straight lines. The \textit{OpenCV} implementation allows for two different variations, a \textit{Standard Hough Lines Transform} and a \textit{Probabilistic Hough Lines Transform}. The standard transform allows for detection of straight lines and is highly resistant to noise \cite{4608701}. The probabilistic transform is more efficient, as it only calculates part of the transform, and is able to handle curved lines and segmented lines better. However, it is less resistant to noise, and with the limited pre-processing performed worse than its standard counterpart. See FIGURE WHATEVER for a comparison between the two variations. 
+\begin{figure}[H]
+\centering
+\includegraphics[width=3.5in]{t5_edge}
+\caption{Example of Canny edge detection}
+\label{fig:Canny}
+\end{figure}
+ 
 
+A Hough Lines transform can be used to detect straight lines. The \textit{OpenCV} implementation allows for two different variations, a \textit{Standard Hough Lines Transform} and a \textit{Probabilistic Hough Lines Transform}. The standard transform allows for detection of straight lines and is highly resistant to noise \cite{4608701}. The probabilistic transform is more efficient, as it only calculates part of the transform, and is able to handle curved lines and segmented lines better. However, it is less resistant to noise, and with the limited pre-processing performed worse than its standard counterpart. See Figure \ref{fig:houghComp} for a comparison between the two variations with no pre-processing. 
+\begin{figure}[H]
+\centering
+\includegraphics[width=3.5in]{t5_houghcomp}
+\caption{Comparison of Hough Transform variants, standard in blue, probabilistic in red}
+\label{fig:houghComp}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=3.5in]{t5_proc}
+\caption{Pre-processing code}
+\label{fig:t5proc}
+\end{figure}
 With the vector of lines detected by the Hough Transform, rendering can begin. The solution makes use of \textit{Temporal Smoothing}\cite{TemporalSmoothing} in order to reduce the amount of jitter between frames. Jitter means the displayed lane boundaries would jump, which is undesirable behaviour and could have negative effects towards the safety of the end user. Temporal Smoothing works by checking the new (current frame) coordinates against the old (previous frame) coordinates. If the change is greater than the threshold, then it is reduced to 10\% of the difference, and then the line is rendered. This greatly reduces the amount of jitter, improving the quality of the lane detection. 
 
 Equations \ref{eq:line} and \ref{eq:line_para} are both equations that represent lines, non-parametric and parametric respectively. In the parametric equation, $\rho$ represents the perpendicular distance from the line to the origin, and $\theta$ is the angle between the perpendicular and the horizontal axis, measured counter-clockwise\cite{HoughRT}. Representing lines parametrically avoids undefined computational behaviour present in the standard model when lines are completely vertical or horizontal. 
@@ -274,10 +293,15 @@ y = mx + c
 \rho = x \cos\theta + y \cos\theta
 \end{equation}
 
-The solution only renders lines that meet one of the following constrains: \begin{itemize}
-\item[] $\rho \leq 1$
-\item[] \textbf{OR}
-\item[] $\rho \geq 2.3$
+\begin{figure}[H]
+\centering
+\includegraphics[width=2.5in]{t5_rhotheta}
+\caption{Parametric representation of lines\cite{HoughRT}}
+\label{fig:t5proc}
+\end{figure}
+
+The solution only renders lines that meet one of the following constraints: \begin{itemize}
+\item[] $\rho \leq 1$ \textbf{OR} $\rho \geq 2.3$
 \end{itemize} This only renders lines that fall close to the vertical, of which the majority of the lane demarcations do. This effectively eliminates most of the false positive results, such as lines detected on passing cars, as well as the lower edge of the overlay rectangle.
 
 Once the Temporal Smoothing has occurred, the calculated coordinates are pushed into the \verb|corners| vector, that stores the edges of the polygon to be drawn showing the correct lane. \verb|topMid| and \verb|btmMid| are the endpoints of the centre line, calculated using the corners of the boundary polygon.
@@ -302,33 +326,34 @@ For areas where $f_0 \neq f_1$, the result will be a blend between the two image
 
 This process will continue for every frame of the loaded video, only stopping when the video does.
 
-When testing on the provided video - dashcam footage taken from a road in Crikvenica, Croatia - the solution performs well. However, it is not perfect, and several frames of the video cause the detected area to jump erratically to the other lane. Due to the use of a standard Hough line transform, the system cannot recognise dashed lane demarcations with any significant degree of accuracy. However, 
+\begin{figure}[H]
+\centering
+\includegraphics[width=2.5in]{video1_screenshot}
+\caption{Screenshot of the solution correctly highlighting the current lane in green}
+\label{fig:t5working}
+\end{figure}
+
 
 \subsection{Limitations}\label{sec:t2_lim}
-In it's current state, the solution would not be fit for purpose. High-risk applications such as self-driving cars, or anything to do with automotive applications, have very narrow margins of error. Additionally, when undefined behaviour occurs, the consequences can include serious injury up to and including, death. 
+In it's current state, the solution would not be fit for purpose. High-risk applications such as self-driving cars, or anything to do with automotive applications, have very narrow margins of error. Additionally, when undefined behaviour occurs, the consequences can include serious injury up to and including, death.
+
+When testing on the provided video - dashcam footage taken from a road in Crikvenica, Croatia - the solution performs well. However, it is not perfect, and several frames of the video cause the detected area to jump erratically to the other lane. Due to the use of a standard Hough line transform, the system cannot recognise dashed lane demarcations with any significant degree of accuracy. In defence of the solution, it has very limited pre-processing done to the feed, and so could be greatly improved upon. For the level of sophistication, the resulting performance is acceptable; nevertheless, inadequate for real-world applications without further improvement. Testing the solution on alternate datasets, such as dashcam footage acquired off of YouTube\cite{SecondVideo}, showed severe inadequacies in the robustness of the solution.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=2.5in]{video2_screenshot}
+\caption{Screenshot of the solution incorrectly highlighting road markings}
+\label{fig:t5working}
+\end{figure}
+
+As discussed above, the solution makes use of a standard Hough lines transform. One limitation of the standard transform is that it cannot detect curved lines, and struggles with segmented ones. By switching to a probabilistic Hough lines transform the robustness of the solution could be improved.
 \subsection{Further Improvements}
+One improvement that could be made is in the noise filtering. While the normalised box filter that \textit{blur} employs is adequate, switching to block-matching and 3D filtering (BM3D) would confer a boost in performance for the edge detection algorithm\cite{Blur}. A cleaner edge map would improve recognition performance throughout the program, and help the solution to deal with less clearly demarcated lanes (such as faded paint, or sub-par lighting conditions.
+
+As discussed in the section prior, the use of standard over probabilistic Hough Line transforms limits the solution's ability to recognise curved and dashed lines. Switching to the probabilistic variant would also have numerous performance benefits, as the probabilistic is more lightweight. Running on desktop hardware, performance is of little concern; however any real-life applications would be limited to portable hardware, and so performance overhead would affect the viability of the solution.
 
 \subsection{Conclusion}
-
-\begin{table}[]
-\caption{Error values of different components.}
-\label{tab:t3error}
-\begin{tabular}{|l|l|}
-\hline
-\textbf{Component} & \textbf{NMSD Error} \\ \hline
-U4                 & 0.000642183         \\ \hline
-C70                & 0.000428351         \\ \hline
-U2                 & 0.000984659         \\ \hline
-L2                 & 0.000689957         \\ \hline
-Q1                 & 0.000671107         \\ \hline
-C97                & 0.000465317         \\ \hline
-C87                & 0.000600116         \\ \hline
-U1                 & 0.00133448          \\ \hline
-U13 (Missing)      & 0.0435289           \\ \hline
-U13 (Present)      & 1.52745e-07         \\ \hline
-L8                 & 0.00050902          \\ \hline
-\end{tabular}
-\end{table}
+Given the heavy limitations placed on the development of the solution, the performance is as expected, with adequate lane tracking on the provided dataset. Performance degrades quickly on any dataset that is not the sample; nor can the solution cope with changes in line colour or continuity. With drastic improvements to both the pre-processing of the images as well as the edge detection methods, the solution may be improved enough to see use in a real-life application.
 
 
 % An example of a floating figure using the graphicx package.
@@ -413,7 +438,7 @@ L8                 & 0.00050902          \\ \hline
 % footnotes above bottom floats. This can be corrected via the \fnbelowfloat
 % command of the stfloats package.
 
-
+\newpage
 \newpage
 \appendix
 
@@ -425,7 +450,7 @@ L8                 & 0.00050902          \\ \hline
 
 For the full code, please see the linked github repository \href{https://github.com/jjpendlebury/AINT308-Coursework}{HERE}.
 \subsection{Task 4 Figures}\label{app:T4}
-\begin{table}[]
+\begin{table}[H]
 \caption{Full results of the intensity testing}
 \label{tab:T4_full}
 \begin{tabular}{lllll}
@@ -450,7 +475,7 @@ For the full code, please see the linked github repository \href{https://github.
 
 \subsection{Code Printouts}
 The following pages contain complete printouts of the code used to implement the solutions outlined above, for reference.
-%\includepdf[pages=-,offset=0 -50]{task1_code.pdf}
+\includepdf[pages=-,offset=0 -50]{task5.pdf}
 %\includepdf[pages=-,offset=0 -50]{task2_code.pdf}
 %\includepdf[pages=-,offset=0 -50]{task3_code.pdf}
 % that's all folks
