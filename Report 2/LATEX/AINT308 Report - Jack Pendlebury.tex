@@ -101,6 +101,8 @@
 %\usepackage[backend = bibtex,style=numeric,sorting=none]{biblatex}
 \addbibresource{AINT308.bib}
 
+\usepackage{amsmath}
+
 \begin{document}
 %
 % paper title
@@ -280,10 +282,30 @@ The solution only renders lines that meet one of the following constrains: \begi
 
 Once the Temporal Smoothing has occurred, the calculated coordinates are pushed into the \verb|corners| vector, that stores the edges of the polygon to be drawn showing the correct lane. \verb|topMid| and \verb|btmMid| are the endpoints of the centre line, calculated using the corners of the boundary polygon.
 
-To draw the translucent boundary polygon on to the video frame two \textit{OpenCV} functions are used: \verb|fillPoly| and \verb|addWeighted|. \verb|fillPoly| uses an array of points in order to fill an area with a specified colour\cite{fillPoly}. A new matrix \verb|overlay| is created, and the current frame 
+To draw the translucent boundary polygon on to the video frame two \textit{OpenCV} functions are used: \verb|fillPoly| and \verb|addWeighted|. \verb|fillPoly| uses an array of points in order to fill an area with a specified colour\cite{fillPoly}. A new matrix \verb|overlay| is created, and the current frame is copied into it using \verb|copyTo|. \verb|copyTo| copies a matrix's data to another, invoking the \verb|create| method in order to properly reallocate the size of the destination matrix\cite{copyTo}. \verb|fillPoly| draws a green polygon between the points specified in the \verb|corners| onto the overlay frame.
+
+\begin{equation}\label{eq:linblend}
+g(x) = (1-\alpha)f_0(x)+\alpha f_1 (x)
+\end{equation}
+
+\verb|addWeighted| performs a linear blend between two frames, following Equation \ref{eq:linblend}. $f_0$ and $f_1$ are the video frames, $\alpha$ is the transparency. As the transparency must equal $1$, the $\alpha$ of the other image will equal $(1-\alpha)$. In areas where $f_0 = f_1$, there will be no change in the image.
+
+\begin{equation}\label{xx}
+\begin{split}
+f_0=& f_1\\
+g(x)=&(1-\alpha)f_0(x)+\alpha f_0 (x) \\
+g(x)=& f_0 
+\end{split}
+\end{equation}
+
+For areas where $f_0 \neq f_1$, the result will be a blend between the two images as per the ratio of the $\alpha$ values. This will be the area where the green rectangle was drawn.
+
+This process will continue for every frame of the loaded video, only stopping when the video does.
+
+When testing on the provided video - dashcam footage taken from a road in Crikvenica, Croatia - the solution performs well. However, it is not perfect, and several frames of the video cause the detected area to jump erratically to the other lane. Due to the use of a standard Hough line transform, the system cannot recognise dashed lane demarcations with any significant degree of accuracy. However, 
 
 \subsection{Limitations}\label{sec:t2_lim}
-
+In it's current state, the solution would not be fit for purpose. High-risk applications such as self-driving cars, or anything to do with automotive applications, have very narrow margins of error. Additionally, when undefined behaviour occurs, the consequences can include serious injury up to and including, death. 
 \subsection{Further Improvements}
 
 \subsection{Conclusion}
