@@ -97,8 +97,8 @@
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-\usepackage[style=numeric,sorting=none]{biblatex}
-%\usepackage[backend = bibtex,style=numeric,sorting=none]{biblatex}
+%\usepackage[style=numeric,sorting=none]{biblatex}
+\usepackage[backend = bibtex,style=numeric,sorting=none]{biblatex}
 \addbibresource{AINT308.bib}
 
 \usepackage{amsmath}
@@ -447,9 +447,14 @@ Given the heavy limitations placed on the development of the solution, the perfo
 
 \onecolumn
 \subsection{Github Repository}
-
 For the full code, please see the linked github repository \href{https://github.com/jjpendlebury/AINT308-Coursework}{HERE}.
 \subsection{Task 4 Figures}\label{app:T4}
+\begin{figure}[H]
+\centering
+\includegraphics[width=3in]{Task4.drawio}
+\caption{Flowchart showing Task 4 solution outline}
+\label{fig:flowchart4}
+\end{figure}
 \begin{table}[H]
 \caption{Full results of the intensity testing}
 \label{tab:T4_full}
@@ -470,12 +475,18 @@ For the full code, please see the linked github repository \href{https://github.
 150               & 150.7878112         & -0.53\%        & 150.747                 & -0.50\%               
 \end{tabular}
 \end{table}
-
+\newpage
 \subsection{Task 5 Figures}\label{app:T5}
-
+\begin{figure}[H]
+\centering
+\includegraphics[width=3in]{Task5.drawio}
+\caption{Flowchart showing Task 5 solution outline}
+\label{fig:flowchart5}
+\end{figure}
 \subsection{Code Printouts}
 The following pages contain complete printouts of the code used to implement the solutions outlined above, for reference.
-\includepdf[pages=-,offset=0 -50]{task5.pdf}
+\includepdf[pages=-,offset=0 -50]{Task4.pdf}
+\includepdf[pages=-,offset=0 -50]{Task5.pdf}
 %\includepdf[pages=-,offset=0 -50]{task2_code.pdf}
 %\includepdf[pages=-,offset=0 -50]{task3_code.pdf}
 % that's all folks

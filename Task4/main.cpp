@@ -102,7 +102,6 @@ int main(int argc, char** argv)
         //==================================Your code goes here===============================
         int BF = 62426;
         //380,250 <- coords to extract
-
         //display images untill x is pressed
         double intensity_avg = 0;
         for (int i = 0;i < 3;i++){
@@ -119,9 +118,7 @@ int main(int argc, char** argv)
             imshow("left", Left);
             imshow("right", Right);
             imshow("disparity", disp8bit);
-
         }
-
         //move to next image
         if (current_mode == CALIBRATION){
             ImageNum+=10;
@@ -136,7 +133,6 @@ int main(int argc, char** argv)
             }
         }
     }
-
     return 0;
 }
 
