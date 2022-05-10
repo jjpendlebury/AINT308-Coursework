@@ -134,7 +134,7 @@ Machine Vision, OpenCV, Object Tracking, C++
 \section{Task 4 - Disparity Mapping}
 \textit{For accompanying large figures, see appendix \ref{app:T4}}
 
-\textit{For the video demo, click \href{https://youtu.be/kQwU62_2fdQ}{HERE}}
+\textit{For the video demo, click \href{https://youtu.be/d2Wa1JnRzoY}{HERE}}
 \subsection{Introduction}
 This task demonstrates the use of disparity maps in order to estimate the distance from a stereo vision system to an object.
 \subsection{Solution}
@@ -150,7 +150,14 @@ The generated calibration data is loaded into the program, and used to distort t
 
 To estimate the distance to an object from the camera, the disparity is used. By using the parallax of the two stereo cameras combined with the disparity mapping the approximate distance of the object can be triangulated. This is similar to how the human brain estimates distance using \textit{binocular disparity}\cite{10.3389/fpsyg.2014.00870}\cite{BERRYHILL2012525}, and is another example of how robotics emulates life in order to mimic functionality. Similar techniques are used by astronomers to measure the distance to stellar objects\cite{parallax}.
 
-Semi-Global Block Matching (SGBM) is used to generate a disparity map. SGBM takes a small region in one image, and searches in nearby locations in the other image for matches. The disparity is the minimum distance needed to find a match. Sum of Absolute Differences (SAD) is used to calculate the similarity\cite{StereoBlockMatching}. The value of each pixel in the template section is subtracted from the respective pixel in the target section, then these differences are summed. The lower the value, the closer the match. It should be noted that before this operation, the images are converted to grey scale, to minimise the amount of data needed to be processed, as each pixel can be represented as a single 8-bit value.
+\begin{figure}[H]
+\centering
+\includegraphics[width=3.5in]{t4_sgbm}
+\caption{Distortion application and SGBM}
+\label{fig:t4_sgbm}
+\end{figure}
+
+Semi-Global Block Matching (SGBM) is used to generate a disparity map. SGBM takes a small region in one image, and searches in nearby locations in the other image for matches. The disparity is the minimum distance needed to find a match. Sum of Absolute Differences (SAD) is used to calculate the similarity\cite{StereoBlockMatching}. The value of each pixel in the template section is subtracted from the respective pixel in the target section, then these differences are summed. The lower the value, the closer the match. It should be noted that before this operation, the images are converted to grey scale, to minimise the amount of data needed to be processed, as each pixel can be represented as a single 8-bit value. SGBM's application can be seen in Figure \ref{fig:t4_sgbm}.
 
 \begin{equation} \label{eq:disparity}
 Disparity = \frac{B \bullet f}{Distance}
@@ -162,7 +169,14 @@ B \bullet f = Distance \bullet Disparity
 Distance = \frac{B\bullet f}{Disparity}
 \end{equation}
 
-To use the \textit{Disparity-Distance} formula, the unknown parameter $B \bullet f$ needed to be derived using the supplied known distances. The pixel $(280,350)$ was chosen as the approximate centre of the target in the known distance images, and it's intensity extracted. To reduce the likelihood of errors, an average of the 3x3 grid around this point was taken. The results can be seen in Table \ref{tab:intensity_results}. Using equations \ref{eq:disparity} and \ref{eq:BF}, it is possible to approximate the value of $B \bullet f = 62426$. Derivation of the values of $B$ and $f$ individually is not necessary for the task. 
+To use the \textit{Disparity-Distance} formula, the unknown parameter $B \bullet f$ needed to be derived using the supplied known distances. The pixel $(280,350)$ was chosen as the approximate centre of the target in the known distance images, and it's intensity extracted. To reduce the likelihood of errors, an average of the 3x3 grid around this point was taken. The results can be seen in Table \ref{tab:intensity_results}, and the code in Figure \ref{fig:t4_intensity}. Using equations \ref{eq:disparity} and \ref{eq:BF}, it is possible to approximate the value of $B \bullet f = 62426$. Derivation of the values of $B$ and $f$ individually is not necessary for the task. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=3.5in]{t4_intensity}
+\caption{Intensity averaging and distance calculations}
+\label{fig:t4_intensity}
+\end{figure}
 
 Table \ref{tab:t4_partial} shows the error results at different distances, with the maximum error being a 3.11\%. This is within the 5\% margin of error expected of the system.
 
@@ -235,6 +249,15 @@ To make the guesses on the distance to the target in the unknown image, the same
 %\label{fig_t1code}
 %\end{figure}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=3.5in]{t4_enum}
+\caption{Mode select ENUM}
+\label{fig:mode}
+\end{figure}
+
+An \verb|enum| named \verb|MODE| controls whether the calibration or execution is performed upon the program being run, and be controlled as seen in figure FIGURE REF. \verb|if| statements are used throughout to change aspects of the solution based on the current mode, such as the number inserted into the file path, as well as the loop control variable's initialisation value.
+
 \subsection{Limitations}
 Given that the system displayed accurate results with the known dataset, and that without the true distances of the unknown dataset performance cannot be conclusively verified, the system performed to specifications. It is difficult to identify limitations given the limited scope of testing, and lack of access to additional testing materials.
 
@@ -248,7 +271,7 @@ The system performed extremely well, correctly identifying every target distance
 \section{Task 5 - Lane Tracking}
 \textit{For accompanying large figures, see appendix \ref{app:T5}}
 
-\textit{For the video demo, click \href{https://youtu.be/kW5fbNTTovo}{HERE}}
+\textit{For the video demo, click \href{https://youtu.be/0gAxKX7zGAQ}{HERE}}
 
 The second task involves using edge detection to correctly identify the current lane in a piece of dashboard camera footage. 
 \subsection{Introduction}

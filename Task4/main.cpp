@@ -115,9 +115,9 @@ int main(int argc, char** argv)
         cout << distance_prediction <<"cm" << endl;
         while(waitKey(10)!='x')
         {
-            imshow("left", Left);
-            imshow("right", Right);
-            imshow("disparity", disp8bit);
+            imshow("left - 10613591", Left);
+            imshow("right - 10613591", Right);
+            imshow("disparity - 10613591", disp8bit);
         }
         //move to next image
         if (current_mode == CALIBRATION){

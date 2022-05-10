@@ -125,7 +125,7 @@ int main()
                 fillPoly(overlay, &pts, &npts, 1, Scalar(0, 255, 0));   //draw lane overlay
                 addWeighted(overlay, alpha, Frame, 1 - alpha, 0, Frame);    //blend overlay onto frame
         }
-        imshow("Video", Frame);
+        imshow("Video Output - 10613591", Frame);
         waitKey(10);
     }
 }
