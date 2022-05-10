@@ -24,9 +24,9 @@ void lineRT(Mat &Src, Vec2f L, Scalar color, int thickness){
 int main()
 {
     //Open video file
-    VideoCapture CarVideo("../Task5/DashCam.mp4");
+    //VideoCapture CarVideo("../Task5/DashCam.mp4");
     //VideoCapture CarVideo("../Task5/road.mp4");
-    //VideoCapture CarVideo("../Task5/Media2.mp4");
+    VideoCapture CarVideo("../Task5/Media2.mp4");
     if(!CarVideo.isOpened()){
         cout<<"Error opening video"<<endl;
         return -1;

@@ -126,7 +126,7 @@ Plymouth, Devon}}
 
 \begin{abstract}
 %\boldmath
- Machine Vision is field of study whose applications are becoming rapidly more prevalent amongst contemporary technology, with advancements having large implications in a wide variety of fields. This report details the use of a popular open-source machine vision library, \textbf{OpenCV}, in two additional real-world applications: Using disparity mapping to estimate distance to an object, and using edge detection in order to detect road markings.
+ Machine Vision is a field of study whose applications are becoming rapidly more prevalent amongst contemporary technology, with advancements having considerable implications in a variety of fields. This report details the use of a popular open-source machine vision library, \textbf{OpenCV}, in two additional real-world applications: Using disparity mapping to estimate the distance to an object, and using edge detection to detect road markings.
 \end{abstract}
 \subsection*{Keywords:}
 Machine Vision, OpenCV, Object Tracking, C++
@@ -138,17 +138,17 @@ Machine Vision, OpenCV, Object Tracking, C++
 \subsection{Introduction}
 This task demonstrates the use of disparity maps in order to estimate the distance from a stereo vision system to an object.
 \subsection{Solution}
-An important first step when working with stereo visions systems is to account for distortions in the image. This can be induced by a number of factors, including both distortions caused by the camera itself as well as distortions caused by a human element of the camera's operation\cite{Distortions}.
+An important first step when working with stereo visions systems is to account for distortions in the image. A number of factors, including both distortions caused by the camera itself as well as distortions caused by a human element of the camera's operation\cite{Distortions}, can induce these.
 
 Without properly calibrating, these distortions and inaccuracies can have a catastrophic effect on the ability for the system to function. This is even more important for applications with safety-critical consequences, such as vision systems for self-driving cars\cite{Bosch} or industrial monitoring equipment\cite{Intel}.
 
-There are multiple methods for performing the calibration. MATLAB's implementation uses Bouguet's method\cite{MATLAB_Calibration}\cite{Bouguet}, whereas Hartley's method\cite{hartley2003multiple} also exists as an alternative. \textit{OpenCV's} built-in calibration function can use both of these algorithms\cite{Book_Calibration}.
+There are multiple methods for performing the calibration. MATLAB's implementation uses Bouguet's method\cite{MATLAB_Calibration}\cite{Bouguet}, whereas Hartley's method\cite{hartley2003multiple} also exists as an alternative. \textit{OpenCV's} built-in calibration function can use both these algorithms\cite{Book_Calibration}.
 
 The calibration function uses pairs of chequerboard images, and generates sets of \textit{intrinsic} and \textit{extrinsic} parameters. The \textit{intrinsic} parameters contain the focal length, principal point, and skew coefficient, all of which are distortion sources local to the camera. The extrinsic parameters store the rotation and translation between the two cameras. 
 
-The generated calibration data is loaded into the program, and used to distort the images in order to correct the distortion created. With perfect calibration, the two distortions will completely cancel out, leaving a perfect fidelity image. \textit{OpenCV's} \verb|remap|\cite{remap} function is used to perform the correct. The \verb|remap| function takes in an input array as well as up to two maps to perform the re-mapping, in this case the input image and the two generated maps created using the intrinsic and extrinsic parameters, outputting the results to a destination array\cite{remap_docs}.
+The generated calibration data is loaded into the program, and used to distort the images to correct the distortion created. With perfect calibration, the two distortions will completely cancel out, leaving a perfect fidelity image. \textit{OpenCV's} \verb|remap|\cite{remap} function is used to perform the correct. The \verb|remap| function takes in an input array as well as up to two maps to perform the re-mapping, in this case, the input image and the two generated maps created using the intrinsic and extrinsic parameters, outputting the results to a destination array\cite{remap_docs}.
 
-To estimate the distance to an object from the camera, the disparity is used. By using the parallax of the two stereo cameras combined with the disparity mapping the approximate distance of the object can be triangulated. This is similar to how the human brain estimates distance using \textit{binocular disparity}\cite{10.3389/fpsyg.2014.00870}\cite{BERRYHILL2012525}, and is another example of how robotics emulates life in order to mimic functionality. Similar techniques are used by astronomers to measure the distance to stellar objects\cite{parallax}.
+The disparity is used to estimate the distance to an object from the camera. By using the parallax of the two stereo cameras combined with the disparity mapping, the approximate distance of the object can be triangulated. This is similar to how the human brain estimates distance using \textit{binocular disparity}\cite{10.3389/fpsyg.2014.00870}\cite{BERRYHILL2012525} and is another example of how robotics emulates life to mimic functionality. Astronomers use similar techniques to measure the distance to stellar objects\cite{parallax}.
 
 \begin{figure}[H]
 \centering
@@ -157,7 +157,7 @@ To estimate the distance to an object from the camera, the disparity is used. By
 \label{fig:t4_sgbm}
 \end{figure}
 
-Semi-Global Block Matching (SGBM) is used to generate a disparity map. SGBM takes a small region in one image, and searches in nearby locations in the other image for matches. The disparity is the minimum distance needed to find a match. Sum of Absolute Differences (SAD) is used to calculate the similarity\cite{StereoBlockMatching}. The value of each pixel in the template section is subtracted from the respective pixel in the target section, then these differences are summed. The lower the value, the closer the match. It should be noted that before this operation, the images are converted to grey scale, to minimise the amount of data needed to be processed, as each pixel can be represented as a single 8-bit value. SGBM's application can be seen in Figure \ref{fig:t4_sgbm}.
+Semi-Global Block Matching (SGBM) is used to generate a disparity map. SGBM takes a small region in one image and searches in nearby locations in the other image for matches. The disparity is the minimum distance needed to find a match. Sum of Absolute Differences (SAD) is used to calculate the similarity\cite{StereoBlockMatching}. The value of each pixel in the template section is subtracted from the respective pixel in the target section, and then these differences are summed. The lower the value, the closer the match. It should be noted that before this operation, the images are converted to greyscale, to minimise the amount of data needed to be processed, as each pixel can be represented as a single 8-bit value. SGBM's application can be seen in Figure \ref{fig:t4_sgbm}.
 
 \begin{equation} \label{eq:disparity}
 Disparity = \frac{B \bullet f}{Distance}
@@ -169,7 +169,7 @@ B \bullet f = Distance \bullet Disparity
 Distance = \frac{B\bullet f}{Disparity}
 \end{equation}
 
-To use the \textit{Disparity-Distance} formula, the unknown parameter $B \bullet f$ needed to be derived using the supplied known distances. The pixel $(280,350)$ was chosen as the approximate centre of the target in the known distance images, and it's intensity extracted. To reduce the likelihood of errors, an average of the 3x3 grid around this point was taken. The results can be seen in Table \ref{tab:intensity_results}, and the code in Figure \ref{fig:t4_intensity}. Using equations \ref{eq:disparity} and \ref{eq:BF}, it is possible to approximate the value of $B \bullet f = 62426$. Derivation of the values of $B$ and $f$ individually is not necessary for the task. 
+To use the \textit{Disparity-Distance} formula, the unknown parameter $B \bullet f$ needed to be derived using the supplied known distances. The pixel $(280,350)$ was chosen as the approximate centre of the target in the known distance images, and it's intensity was extracted. An average of the 3x3 grid around this point was taken to reduce the chance of anomalous pixel results affecting the derivation. The results can be seen in Table \ref{tab:intensity_results}, and the code in Figure \ref{fig:t4_intensity}. Using equations \ref{eq:disparity} and \ref{eq:BF}, it is possible to approximate the value of $B \bullet f = 62426$. Derivation of the values of $B$ and $f$ individually is not necessary for the task. 
 
 \begin{figure}[H]
 \centering
@@ -178,9 +178,9 @@ To use the \textit{Disparity-Distance} formula, the unknown parameter $B \bullet
 \label{fig:t4_intensity}
 \end{figure}
 
-Table \ref{tab:t4_partial} shows the error results at different distances, with the maximum error being a 3.11\%. This is within the 5\% margin of error expected of the system.
+Table \ref{tab:t4_partial} shows the error results at different distances, with a maximum absolute error of 3.11\%. This is within the 5\% margin of error expected of the system.
 
-To make the guesses on the distance to the target in the unknown image, the same process is repeated. The unknown image pairs are read in, and are grey-scaled before using SGBM to produce a disparity map. The retrieved average intensity is used in Equation \ref{eq:Distance} to produce an estimate for the distance to the target. The results can be seen in Table \ref{tab:t4_guesses}. 
+The same process is repeated to make the guesses on the distance to the target in the unknown image. The unknown image pairs are read in, and are grey-scaled before using SGBM to produce a disparity map. The retrieved average intensity is used in Equation \ref{eq:Distance} to estimate for the distance to the target. The results can be seen in Table \ref{tab:t4_guesses}. 
 
 \begin{table}[]
 \caption{Intensity Readings At Known Distances}
@@ -256,34 +256,34 @@ To make the guesses on the distance to the target in the unknown image, the same
 \label{fig:mode}
 \end{figure}
 
-An \verb|enum| named \verb|MODE| controls whether the calibration or execution is performed upon the program being run, and be controlled as seen in figure FIGURE REF. \verb|if| statements are used throughout to change aspects of the solution based on the current mode, such as the number inserted into the file path, as well as the loop control variable's initialisation value.
+An \verb|enum| named \verb|MODE| controls whether the calibration or execution is performed upon the program being run, and is controlled as seen in figure \ref{fig:mode}. \verb|if| statements are used throughout to change aspects of the solution based on the current mode, such as the number inserted into the file path, as well as the loop control variable's initialisation value.
 
 \subsection{Limitations}
 Given that the system displayed accurate results with the known dataset, and that without the true distances of the unknown dataset performance cannot be conclusively verified, the system performed to specifications. It is difficult to identify limitations given the limited scope of testing, and lack of access to additional testing materials.
 
 \subsection{Further Improvements} \label{sec:further1}
- This system's performance is directly tied to the quality of it's calibration, so more accurate calibration data would benefit it's performance. This could be done by having less clutter in the calibration images. Ideally, they would be shot on a plain background, with the only difference being the target moving. Additionally, the distance of the target could be measured with a more accurate and precise instrument, to further ensure the quality of the calibration.
+ This system's performance is directly tied to the quality of it's calibration, so more accurate calibration data would benefit it's performance. This could be done by having less clutter in the calibration images. Ideally, they would be shot on a plain background, with the only difference being the target moving. Additionally, the distance of the target could be measured with a more accurate and precise instrument to further ensure the calibration quality.
  
 One disadvantage of using SGBM is that it is very processing intensive, especially as the size of the area to be searched increases. Performing SGBM on larger images on less powerful hardware may not be possible in real-time. To alleviate this, Field Programmable Gate Arrays (FPGAs) can be used to create bespoke hardware capable of performing the SGBM at high speeds\cite{HardwareSGBM}.
 \subsection{Conclusion}
-The system performed extremely well, correctly identifying every target distance with a sub 5\% error rate. It can be said that the task was a success, despite not knowing the performance when estimating the unknown targets, due to the performance with the testing targets. This demonstrates that disparity and parallax can be used to calculate distance to a target using a simple software solution, and \textit{OpenCV}. 
+The system performed exceptionally well, correctly identifying every target distance with a sub 5\% error rate. It can be said that the task was a success, despite not knowing the performance when estimating the unknown targets, due to the performance with the test data. This demonstrates that disparity and parallax can be used to calculate the distance to a target using a simple software solution and \textit{OpenCV}. 
 
 \section{Task 5 - Lane Tracking}
 \textit{For accompanying large figures, see appendix \ref{app:T5}}
 
-\textit{For the video demo, click \href{https://youtu.be/0gAxKX7zGAQ}{HERE}}
+\textit{For the video demo, click \href{https://youtu.be/lRf7K6ZGJDk}{HERE}}
 
 The second task involves using edge detection to correctly identify the current lane in a piece of dashboard camera footage. 
 \subsection{Introduction}
-Giving computers the ability to recognise lines has many potential applications, one of the foremost being for self-driving cars and other related applications. Edge detection is one method of letting computers recognise lines, and in this application will be used to recognise lane demarcations on roads, using dashboard camera footage as a testing medium.
+Giving computers the ability to recognise lines has many potential applications, one of the foremost being for self-driving cars and other related applications. Edge detection is one method of letting computers recognise lines. In this application it will be used to recognise lane demarcations on roads, using dashboard camera footage as a testing medium.
 \subsection{Solution}\label{2_solution}
-After loading in a frame of video data, \textit{OpenCV's} \verb|cvtColour| function is used, to convert the image to greyscale. For this implementation, colour information is not necessary, and while it's loss does reduce the efficacy of edge-detection \cite{GreyVSColor}, the solution still performed adequately.  
+After loading in a frame of video data, \textit{OpenCV's} \verb|cvtColour| function is used to convert the image to greyscale. For this implementation, colour information is not necessary, and while its loss does reduce the efficacy of edge-detection \cite{GreyVSColor}, the solution still performed adequately.  
 
-When performing edge detection, it is important to apply filtering to smooth the image, and remove noise. Noise may cause contiguous edges to be picked up as many, smaller edges.  To do this, \textit{OpenCV's} \verb|blur| function is used. At it's default settings, \verb|blur| employs a variable sized normalized box filter to smooth an image\cite{BlurDocs}. $3$x$3$ was chosen, too large a kernel and the more granular details of the image would be lost, whereas too small a kernel would mean the smoothing had very little effect on the image.
+When performing edge detection, it is essential to apply filtering to smooth the image and remove noise. Noise may cause contiguous edges to be picked up as many smaller edges.  To do this, \textit{OpenCV's} \verb|blur| function is used. At its default settings, \verb|blur| employs a variable-sized normalized box filter to smooth an image\cite{BlurDocs}. $3$x$3$ was chosen, too large a kernel and the more granular details of the image would be lost, whereas too small a kernel would mean the smoothing had minimal effect on the image.
 
-During operation, the edge detection would detect false positives in the tree line. This effect is unavoidable, no matter what parameters for the edge detection are used. To avoid this, a rectangular overlay is added to the video feed, blocking the top half of the video. This overlay prevents the upper half of the image from going though the edge detection algorithm, and consequently stops false-positives in the tree-line from being detected.
+During operation, the edge detection would detect false positives in the tree line. This effect is unavoidable, no matter what parameters for the edge detection are used. To avoid this, a rectangular overlay is added to the video feed, blocking the top half of the video. This overlay prevents the upper half of the image from going though the edge detection algorithm, and consequently stops false-positives in the tree line from being detected.
 
-The solution uses Canny edge detection in order to detect the lines within the target image. \textit{OpenCV} implements Canny edge detection using the \verb|Canny| function\cite{8265710}, which takes in an input and output frame as well as an upper and lower threshold, \verb|upperThreshold| and \verb|lowerThreshold|. Figure \ref{fig:Canny} shows the output of Canny edge detection on an example video frame. Changing the threshold values changes the sensitivity of the edge detection. The final values chosen in the solution are $50$ and $100$. Different values were experimented with, however the main factor that changed the performance of the solution was the Hough Lines parameters, discussed below. 
+The solution uses Canny edge detection to detect the lines within the target image. \textit{OpenCV} implements Canny edge detection using the \verb|Canny| function\cite{8265710}, which takes in an input and output frame as well as an upper and lower threshold, \verb|upperThreshold| and \verb|lowerThreshold|. Figure \ref{fig:Canny} shows the output of Canny edge detection on an example video frame. Changing the threshold values changes the sensitivity of the edge detection. The final values chosen in the solution are $50$ and $100$. Different values were experimented with; however, the main factor that changed the performance of the solution was the Hough Lines parameters, discussed below. 
 
 \begin{figure}[H]
 \centering
@@ -293,7 +293,7 @@ The solution uses Canny edge detection in order to detect the lines within the t
 \end{figure}
  
 
-A Hough Lines transform can be used to detect straight lines. The \textit{OpenCV} implementation allows for two different variations, a \textit{Standard Hough Lines Transform} and a \textit{Probabilistic Hough Lines Transform}. The standard transform allows for detection of straight lines and is highly resistant to noise \cite{4608701}. The probabilistic transform is more efficient, as it only calculates part of the transform, and is able to handle curved lines and segmented lines better. However, it is less resistant to noise, and with the limited pre-processing performed worse than its standard counterpart. See Figure \ref{fig:houghComp} for a comparison between the two variations with no pre-processing. 
+A Hough Lines transform can be used to detect straight lines. The \textit{OpenCV} implementation allows for two different variations, a \textit{Standard Hough Lines Transform} and a \textit{Probabilistic Hough Lines Transform}. The standard transform allows for the detection of straight lines and is highly resistant to noise \cite{4608701}. The probabilistic transform is more efficient, as it only calculates part of the transform and can handle curved lines and segmented lines better. However, it is less resistant to noise and, with the limited pre-processing, performs worse than its standard counterpart. See Figure \ref{fig:houghComp} for a comparison between the two variations with no pre-processing. 
 \begin{figure}[H]
 \centering
 \includegraphics[width=3.5in]{t5_houghcomp}
@@ -306,7 +306,7 @@ A Hough Lines transform can be used to detect straight lines. The \textit{OpenCV
 \caption{Pre-processing code}
 \label{fig:t5proc}
 \end{figure}
-With the vector of lines detected by the Hough Transform, rendering can begin. The solution makes use of \textit{Temporal Smoothing}\cite{TemporalSmoothing} in order to reduce the amount of jitter between frames. Jitter means the displayed lane boundaries would jump, which is undesirable behaviour and could have negative effects towards the safety of the end user. Temporal Smoothing works by checking the new (current frame) coordinates against the old (previous frame) coordinates. If the change is greater than the threshold, then it is reduced to 10\% of the difference, and then the line is rendered. This greatly reduces the amount of jitter, improving the quality of the lane detection. 
+With the vector of lines detected by the Hough Transform, rendering can begin. The solution makes use of \textit{Temporal Smoothing}\cite{TemporalSmoothing} to reduce the amount of jitter between frames. Jitter means the displayed lane boundaries would jump, which is undesirable behaviour and could have negatively effects the end user's safety. Temporal Smoothing works by checking the new (current frame) coordinates against the old (previous frame) coordinates. If the change is greater than the threshold, it is reduced to 10\% of the difference, and the line is rendered. This greatly reduces the amount of jitter, improving the quality of the lane detection. 
 
 Equations \ref{eq:line} and \ref{eq:line_para} are both equations that represent lines, non-parametric and parametric respectively. In the parametric equation, $\rho$ represents the perpendicular distance from the line to the origin, and $\theta$ is the angle between the perpendicular and the horizontal axis, measured counter-clockwise\cite{HoughRT}. Representing lines parametrically avoids undefined computational behaviour present in the standard model when lines are completely vertical or horizontal. 
 \begin{equation}\label{eq:line}
@@ -329,7 +329,7 @@ The solution only renders lines that meet one of the following constraints: \beg
 
 Once the Temporal Smoothing has occurred, the calculated coordinates are pushed into the \verb|corners| vector, that stores the edges of the polygon to be drawn showing the correct lane. \verb|topMid| and \verb|btmMid| are the endpoints of the centre line, calculated using the corners of the boundary polygon.
 
-To draw the translucent boundary polygon on to the video frame two \textit{OpenCV} functions are used: \verb|fillPoly| and \verb|addWeighted|. \verb|fillPoly| uses an array of points in order to fill an area with a specified colour\cite{fillPoly}. A new matrix \verb|overlay| is created, and the current frame is copied into it using \verb|copyTo|. \verb|copyTo| copies a matrix's data to another, invoking the \verb|create| method in order to properly reallocate the size of the destination matrix\cite{copyTo}. \verb|fillPoly| draws a green polygon between the points specified in the \verb|corners| vector onto the overlay frame.
+To draw the translucent boundary polygon on to the video frame, two \textit{OpenCV} functions are used: \verb|fillPoly| and \verb|addWeighted|. \verb|fillPoly| uses an array of points to fill an area with a specified colour\cite{fillPoly}. A new matrix \verb|overlay| is created, and the current frame is copied into it using \verb|copyTo|. \verb|copyTo| copies a matrix's data to another, invoking the \verb|create| method to properly reallocate the size of the destination matrix\cite{copyTo}. \verb|fillPoly| draws a green polygon between the points specified in the \verb|corners| vector onto the overlay frame.
 
 \begin{equation}\label{eq:linblend}
 g(x) = (1-\alpha)f_0(x)+\alpha f_1 (x)
@@ -360,7 +360,7 @@ This process will continue for every frame of the loaded video, only stopping wh
 \subsection{Limitations}\label{sec:t2_lim}
 In it's current state, the solution would not be fit for purpose. High-risk applications such as self-driving cars, or anything to do with automotive applications, have very narrow margins of error. Additionally, when undefined behaviour occurs, the consequences can include serious injury up to and including, death.
 
-When testing on the provided video - dashcam footage taken from a road in Crikvenica, Croatia - the solution performs well. However, it is not perfect, and several frames of the video cause the detected area to jump erratically to the other lane. Due to the use of a standard Hough line transform, the system cannot recognise dashed lane demarcations with any significant degree of accuracy. In defence of the solution, it has very limited pre-processing done to the feed, and so could be greatly improved upon. For the level of sophistication, the resulting performance is acceptable; nevertheless, inadequate for real-world applications without further improvement. Testing the solution on alternate datasets, such as dashcam footage acquired off of YouTube\cite{SecondVideo}, showed severe inadequacies in the robustness of the solution.
+When testing on the provided video - dashcam footage taken from a road in Crikvenica, Croatia - the solution performs well. However, it is not perfect, and several frames of the video cause the detected area to jump erratically to the other lane. Due to the use of a standard Hough line transform, the system cannot recognise dashed lane demarcations with any significant degree of accuracy. In defence of the solution, it has very limited pre-processing done to the feed, and so could be significantly improved upon. For the level of sophistication, the resulting performance is acceptable; nevertheless, it is inadequate for real-world applications without further improvement. Testing the solution on alternate datasets, such as dashcam footage acquired off of YouTube\cite{SecondVideo}, showed severe inadequacies in the robustness of the solution.
 
 \begin{figure}[H]
 \centering
@@ -373,10 +373,10 @@ As discussed above, the solution makes use of a standard Hough lines transform. 
 \subsection{Further Improvements}
 One improvement that could be made is in the noise filtering. While the normalised box filter that \textit{blur} employs is adequate, switching to block-matching and 3D filtering (BM3D) would confer a boost in performance for the edge detection algorithm\cite{Blur}. A cleaner edge map would improve recognition performance throughout the program, and help the solution to deal with less clearly demarcated lanes (such as faded paint, or sub-par lighting conditions.
 
-As discussed in the section prior, the use of standard over probabilistic Hough Line transforms limits the solution's ability to recognise curved and dashed lines. Switching to the probabilistic variant would also have numerous performance benefits, as the probabilistic is more lightweight. Running on desktop hardware, performance is of little concern; however any real-life applications would be limited to portable hardware, and so performance overhead would affect the viability of the solution.
+As discussed in the section prior, the use of standard over probabilistic Hough Line transforms limits the solution's ability to recognise curved and dashed lines. Switching to the probabilistic variant would also have numerous performance benefits, as the probabilistic is more lightweight. Running on desktop hardware, performance is of little concern; however, any real-life applications would be limited to portable hardware, and so performance overhead would affect the viability of the solution.
 
 \subsection{Conclusion}
-Given the heavy limitations placed on the development of the solution, the performance is as expected, with adequate lane tracking on the provided dataset. Performance degrades quickly on any dataset that is not the sample; nor can the solution cope with changes in line colour or continuity. With drastic improvements to both the pre-processing of the images as well as the edge detection methods, the solution may be improved enough to see use in a real-life application.
+Given the heavy limitations placed on the development of the solution, the performance is as expected, with adequate lane tracking on the provided dataset. Performance degrades quickly on any dataset that is not the sample; nor can the solution cope with changes in line colour or continuity. With drastic improvements to both the pre-processing of the images, as well as the edge detection methods, the solution may be improved enough to see use in a real-life application.
 
 
 % An example of a floating figure using the graphicx package.
