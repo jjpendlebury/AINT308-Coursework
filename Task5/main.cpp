@@ -24,9 +24,9 @@ void lineRT(Mat &Src, Vec2f L, Scalar color, int thickness){
 int main()
 {
     //Open video file
-    VideoCapture CarVideo("../Task5/DashCam.mp4");
+    //VideoCapture CarVideo("../Task5/DashCam.mp4");
     //VideoCapture CarVideo("../Task5/road.mp4");
-    //VideoCapture CarVideo("../Task5/Media2.mp4");
+    VideoCapture CarVideo("../Task5/Media2.mp4");
     if(!CarVideo.isOpened()){
         cout<<"Error opening video"<<endl;
         return -1;
@@ -125,7 +125,7 @@ int main()
                 fillPoly(overlay, &pts, &npts, 1, Scalar(0, 255, 0));   //draw lane overlay
                 addWeighted(overlay, alpha, Frame, 1 - alpha, 0, Frame);    //blend overlay onto frame
         }
-        imshow("Video", Frame);
+        imshow("Video Output - 10613591", Frame);
         waitKey(10);
     }
 }
